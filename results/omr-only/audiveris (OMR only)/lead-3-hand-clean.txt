@@ -1,0 +1,35 @@
+key: -2
+time: 4/4
+m1 | chords:  | events: {3 Dn4:q Eb4:q Fn4:q} An4:h
+m2 | chords:  | events: R:q Gn4:q An4:q Fn4:8 Dn4:8
+m3 | chords:  | events: Eb4:h R:q Fn4:q
+m4 | chords:  | events: An4:q Gn4:q F#4:8 Cn4:8 Bb3:8 An3:8
+m5 | chords:  | events: Gn3:h Eb3:q. Cn3:8~
+m6 | chords:  | events: Cn3:8 Eb3:q An3:8~ {3 An3:q Bb3:q~ Bb3:q}
+m7 | chords:  | events: Cn4:q. [Eb3+Dn4]:q Cn4:8~ Cn4:8 Dn4:q
+m8 | chords:  | events: En4:h [Fn3+Dn4]:q Dn4:q~ [Fn3+Dn4]:q
+m9 | chords:  | events: {3 En4:q F#4:q Gn4:q~} Gn4:q An4:8 Gn4:8
+m10 | chords:  | events: R:q Fn4:q Gn4:q Bb3:q
+m11 | chords:  | events: Fn4:h Gn4:q. [Cn4+An4]:q
+m12 | chords:  | events: R:8 [Gn3+Fn4]:q Cn4:q R:q Fn3:q
+m13 | chords:  | events: R:q Eb3:8 Cn3:8 Dn3:q Fn3:8 Gn3:8
+m14 | chords:  | events: Bb3:q Cn4:8 Dn4:8 Fn4:h
+m15 | chords:  | events: Eb4:q. [Fn3+Dn4]:q [Fn3+Dn4]:q Fn3:q
+m16 | chords:  | events: R:h Dn3:q An3:q
+m17 | chords:  | events: Bb3:q Eb3:8 Bb3:8 Cn4:h
+m18 | chords:  | events: Eb4:8 Dn4:8 Cn4:q Bb3:8~ Bb3:8 F#3:8 Gn3:8
+m19 | chords:  | events: An3:q Bb3:q~ Bb3:q Cn4:q
+m20 | unreadable: tuplet (6, 4) is outside the reading format
+m21 | chords:  | events: R:q Bb3:q An3:8 Dn4:8 Cn4:q
+m22 | chords:  | events: R:8 [Eb3+Cn4]:q Dn4:q~ Dn4:q.
+m23 | chords:  | events: An4:q Gn4:8 En4:8 Dn4:q Bb3:q
+m24 | chords:  | events: Gn3:q. Fn3:8
+m25 | chords:  | events: An3:8 Gn3:8 Fn3:8~ Fn3:8
+m26 | chords:  | events: R:h En3:q Dn3:8 Cn3:8
+m27 | chords:  | events: Dn3:q. Cn3:8 Fn3:q Gn3:8 Dn4:8
+m28 | chords:  | events: En4:8 Dn4:8 Cn4:8 Bn3:8 En4:h
+m29 | chords:  | events: Fn4:q Dn4:8 Cn4:8 En3:q
+m30 | chords:  | events: An3:8 Gn3:8
+m31 | chords:  | events: Dn3:q. Cn3:8 Dn3:h
+m32 | chords:  | events: R:q An3:q Fn4:8 Gn4:8 An4:q
+m33 | chords:  | events: Gn4:q Eb4:8 Gn4:8~ Gn4:q An4:q

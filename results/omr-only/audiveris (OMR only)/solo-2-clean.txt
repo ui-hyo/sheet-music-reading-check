@@ -1,0 +1,33 @@
+key: None
+time: 4/4
+m1 | chords:  | events: {3 C#5:8 Dn5:8 En5:8} F#5:8 An5:8 Dn6:8~ Dn6:8 Bn5:8 An5:8
+m2 | chords:  | events: {3 Gn5:8 Dn5:8 C#5:8~} C#5:8~ C#5:8 R:q Bn4:8 C#5:8
+m3 | chords:  | events: R:8 F#4:8 G#4:8 Dn5:8 C#5:q Bn4:q
+m4 | chords:  | events: G#4:8 An4:8 F#4:q En4:q F#4:q~
+m5 | chords:  | events: F#4:q Cn5:8 Bb4:8 Ab4:q {3 Db4:8 Eb4:8 Db4:8}
+m6 | chords:  | events: R:8 Dn4:8 Eb4:8 Cn4:8 Dn4:16 Eb4:16 Fn4:16 Eb4:16 Cn4:q
+m7 | chords:  | events: {3 Db4:q Fn4:q Gn4:q} Ab4:8 Bb4:8 Ab4:8 Gn4:8
+m8 | chords:  | events: Fn4:q {3 Gn4:8 Fn4:8 Eb4:8} R:8 Db4:8 Cn4:q
+m9 | chords:  | events: En4:8 Fn4:8 Gn4:8 Fn4:8 An4:q {3 An4:8 Bb4:8 Dn5:8~}
+m10 | chords:  | events: Dn5:q. Bb5:8 R:q Cn6:8 Dn6:8
+m11 | chords:  | events: En6:8 Dn6:8~ Dn6:8 Bb5:8 R:h
+m12 | chords:  | events: En5:16 Fn5:16 Bb4:16 An4:16 Gn4:q En4:q {3 Dn4:8 Fn4:8 En4:8}
+m13 | chords:  | events: R:8 Dn4:8 Cn4:q R:h
+m14 | chords:  | events: R:8 Gn4:8 Bb4:8~ Bb4:8 Ab4:h
+m15 | chords:  | events: Fn4:8~ Fn4:8 Eb4:8 Dn4:8 An4:q Ab4:8 Gn4:8
+m16 | chords:  | events: R:8 Fn4:8 Eb4:8 Db4:8 Cn4:8 Db4:8 Eb4:8~ Eb4:8
+m17 | chords:  | events: R:8 En4:8 Bb4:8 An4:8 Bn4:q~ {3 Bn4:8 F#4:8~ F#4:8}
+m18 | chords:  | events: G#4:8 G#4:8 An4:8 C#5:8 Dn5:q. En5:8
+m19 | chords:  | events: F#5:q An5:q~ An5:q Ab5:8 Gn5:8
+m20 | chords:  | events: Dn6:8 En6:8 C#6:8 Gn5:8 F#5:8 En5:8 Gn5:8~ Gn5:8
+m21 | unreadable: tuplet (6, 4) is outside the reading format
+m22 | chords:  | events: Dn5:h En5:q Gn5:q
+m23 | chords:  | events: R:8 An5:8 Bn5:8 Cn6:8 R:8 Bn5:8 Cn6:8 Dn6:8
+m24 | chords:  | events: R:8 Cn6:8 Bn5:q {3 An5:8 Cn5:8 Ab4:8} Gn4:8 F#4:8
+m25 | chords:  | events: Cn5:q~ Cn5:8 Bb4:8 An4:8~ An4:8 C#5:8 Dn5:8~
+m26 | chords:  | events: Dn5:q Ab5:8 Gn5:8 Bb4:8 Cn5:q Bb4:8
+m27 | chords:  | events: An4:q Bn4:8 Cn5:8 Eb5:q {3 Fn5:8 Eb5:8 Fn5:8}
+m28 | chords:  | events: Bb5:8~ Bb5:8 Dn6:8 Eb6:8~ Eb6:q Dn6:8 Eb6:8
+m29 | chords:  | events: An5:8 Cn6:8 Bn5:8 An5:8 R:8 Gn5:8 Fn5:8 En5:8
+m30 | chords:  | events: Dn5:8 Bn4:8 Cn5:8 An5:8 D#5:q En5:8 Bn5:8
+m31 | chords:  | events: Dn5:q Fn4:8 Cn4:8 {3 C#4:8 Dn4:8 En4:8} Fn4:8 Gn4:8

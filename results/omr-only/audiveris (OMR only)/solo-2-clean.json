@@ -1,0 +1,11 @@
+{
+ "product": "audiveris (OMR only)",
+ "page": "solo-2",
+ "input": "clean",
+ "duration_s": 9,
+ "ok": true,
+ "tool_calls": null,
+ "reported_models": [],
+ "cli_version": "Audiveris 5.11.0",
+ "note": "1 export file(s)"
+}

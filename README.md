@@ -2,7 +2,9 @@
 
 Small tools for measuring how well an AI agent reads printed sheet music: a text format for a reading, a scorer, a seeded generator of test pages, and a runner for agent CLIs.
 
-Status: work in progress. Results and the write-up are not here yet.
+Status: first results are in. The write-up is a draft: [docs/article.md](docs/article.md).
+
+Short version: on three generated pages (522 notes), read with no tools, Claude Opus 5 got 20% of the notes right and Opus 5.5 got 99.8%; GPT-5.6 Sol got 49% and GPT-6.1 Sol got all of them. One run per cell, so treat small differences as noise.
 
 ## What is measured
 
@@ -31,6 +33,8 @@ PYTHONPATH=src .venv/bin/python -m sheetcheck.material --style solo --seed 1 --o
 PYTHONPATH=src python3 -m sheetcheck.run --batch no-tools --pages solo-1,lead-3 --inputs clean,lowres --products all
 PYTHONPATH=src python3 -m sheetcheck.omr --pages solo-1,lead-3        # OMR only, no language model
 PYTHONPATH=src python3 -m sheetcheck.score material/solo-1/answer.txt some-reading.txt
+PYTHONPATH=src python3 -m sheetcheck.run --batch no-tools --report-only           # score every stored reading again
+.venv/bin/python docs/make_figures.py                                          # needs matplotlib
 ```
 
 Each run happens in a fresh folder outside the repository that holds only the page image. While a batch runs, the repository folder is made unreadable (answers, generator, git history, earlier results), and each finished run folder is closed as well. If a batch is killed hard, restore access with `chmod 775 .` in the repository and `chmod -R u+rwx` on the run folder.

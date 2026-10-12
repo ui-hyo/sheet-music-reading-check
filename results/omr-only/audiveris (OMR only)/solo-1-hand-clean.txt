@@ -1,0 +1,35 @@
+key: None
+time: 4/4
+m0 | chords:  | events: R:h Db4:8 Cn4:8 Bb3:8
+m1 | chords:  | events: An3:8
+m2 | chords:  | events: Gn3:q Cn3:q Db3:8 Fn3:8
+m3 | chords:  | events: Gb3:8
+m4 | chords:  | events: An3:8 Bb3:8 Eb4:8~ Eb4:q An3:8 Bb3:8 Eb4:h
+m5 | chords:  | events: Db4:16 Fn4:16 Cn4:16 Db4:16 Cn4:q
+m6 | chords:  | events: An3:q~ An3:8 Fn3:8
+m7 | chords:  | events: Eb3:q. Cn3:8 Eb3:8 Cn4:8 Db4:8 Eb4:8
+m8 | chords:  | events: Cn5:8 Dn5:8 Eb5:8 Dn5:8 Fb5:q Eb5:8 Cn5:8
+m9 | chords:  | events: Bb4:16 Ab4:16 Db5:16 Bb4:16 Ab4:q {3 Fb4:8 Eb4:8 Ab4:8} Gn4:8 Ab4:8
+m10 | chords:  | events: An4:16 Bb4:16~ Bb4:16 An4:16 Gn4:q Fn4:8 Dn4:8 En4:q~
+m11 | chords:  | events: En4:8 Dn4:8 Bb3:q Cn4:h
+m12 | chords:  | events: R:8 [An3+Fn4]:q En4:q G#4:q {3 An4:8 Gn4:8 An4:8}
+m13 | chords:  | events: R:q Cn4:8 An3:8 {3 Dn3:q Cn3:q En3:q~}
+m14 | chords:  | events: En3:8 F#3:16 En3:16 Bn3:8 Dn4:8 C#4:q
+m15 | chords:  | events: Dn4:q. [Dn3+Bn3]:q En3:8~ En3:8 C#4:q
+m16 | chords:  | events: R:8 Dn4:8 En4:8 F#4:8 Ab4:q Gn4:8 F#4:8
+m17 | chords:  | events: Gn4:q A#4:q En4:8~ En4:8
+m18 | chords:  | events: Db4:q Eb4:q~ Eb4:8 Bb4:8 Db5:q
+m19 | chords:  | events: Gb4:q. [An3+Fn4]:q R:q An4:8 Gb4:8
+m20 | chords:  | events: Eb4:q Fn4:8~ Fn4:8 {3 Ab4:8 Db5:8 Bb4:8} Cn5:q
+m21 | chords:  | events: {3 Ab4:8~ Ab4:8 Gb4:8~} Gb4:8~ Gb4:8 Eb4:q. [Gn3+Fn4]:q
+m22 | chords:  | events: {3 Gn4:8 Bn4:8 Cn5:8} Dn5:8 Bn4:8 F#4:8 Gn4:16 Fn4:16~ Fn4:8 En4:8
+m23 | chords:  | events: Gn4:q~ Gn4:8 Fn4:8 {3 D#4:8 En4:8 An3:8} Cn4:q
+m24 | chords:  | events: An3:q. [En3+Cn4]:q R:h
+m25 | chords:  | events: R:q Dn4:q C#4:16 Dn4:16 En4:16 Fn4:16 Gn4:q
+m26 | chords:  | events: Bn4:q An4:q Bn4:q
+m27 | chords:  | events: Dn5:8 En5:8~ En5:8 Dn5:8~ Dn5:8 C#5:8 Bn4:8 En4:8
+m28 | chords:  | events: R:h Bn3:q Cn4:q
+m29 | chords:  | events: Bn3:8 Dn4:8 En4:8 F#4:8~ F#4:8 Gn4:16 An4:16 Cn4:8~ Cn4:8
+m30 | chords:  | events: Bn3:q {3 Cn4:8 An3:8 Gn3:8} G#3:8 An3:8 Bn3:q
+m31 | chords:  | events: Gn3:q Dn3:8 Cn3:8 R:8 En3:8 Dn3:8 G#3:8
+m32 | chords:  | events: Db4:8 Cn4:8 Gn4:q An4:q F#4:8 Gn4:8

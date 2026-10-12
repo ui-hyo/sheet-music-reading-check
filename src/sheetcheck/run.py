@@ -228,7 +228,8 @@ class Hidden:
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--batch', required=True)
-    ap.add_argument('--pages', required=True, help='comma-separated folder names under material/')
+    ap.add_argument('--pages', default='', help='comma-separated folder names under material/')
+    ap.add_argument('--report-only', action='store_true', help='run nothing; score every stored reading of the batch again')
     ap.add_argument('--inputs', default='clean,lowres')
     ap.add_argument('--products', default='all')
     ap.add_argument('--timeout', type=int, default=2700)
@@ -237,15 +238,18 @@ def main(argv=None):
     ap.add_argument('--parallel-by', choices=['vendor', 'product'], default='vendor',
                     help='what runs side by side: one lane per vendor CLI (default) or one per product')
     args = ap.parse_args(argv)
+    if args.report_only:
+        return report(ROOT / 'results' / args.batch, all_answers())
+    if not args.pages:
+        ap.error('--pages is required unless --report-only is given')
     products = list(PRODUCTS) if args.products == 'all' else args.products.split(',')
     unknown = [p for p in products if p not in PRODUCTS]
     if unknown:
         sys.exit(f'unknown products: {unknown}')
     format_text = (ROOT / 'FORMAT.md').read_text()
     out_dir = ROOT / 'results' / args.batch
-    answers, jobs = {}, []
+    jobs = []
     for page in args.pages.split(','):
-        answers[page] = (ROOT / 'material' / page / 'answer.txt').read_text()
         for inp in args.inputs.split(','):
             image = (ROOT / 'material' / page / INPUT_FILE[inp]).read_bytes()
             image_name = 'page' + pathlib.Path(INPUT_FILE[inp]).suffix
@@ -286,7 +290,12 @@ def main(argv=None):
         folder.mkdir(parents=True, exist_ok=True)
         (folder / f"{j['page']}-{j['input']}.txt").write_text(r['reading'])
         (folder / f"{j['page']}-{j['input']}.json").write_text(json.dumps(r['meta'], indent=1) + '\n')
-    report(out_dir, answers)
+    report(out_dir, all_answers())
+
+
+def all_answers() -> dict[str, str]:
+    """Answer text for every built page, so a report always covers the whole batch folder."""
+    return {p.parent.name: p.read_text() for p in sorted((ROOT / 'material').glob('*/answer.txt'))}
 
 
 def report(out_dir: pathlib.Path, answers: dict[str, str]) -> None:

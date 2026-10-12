@@ -19,7 +19,7 @@ import tempfile
 import time
 
 from .musicxml import read_musicxml, to_reading_text
-from .run import INPUT_FILE, ROOT, report
+from .run import INPUT_FILE, ROOT, all_answers, report
 
 PRODUCT = 'audiveris (OMR only)'
 
@@ -56,9 +56,7 @@ def main(argv=None):
                         if line.strip().lower().startswith('- version:')), None)
     folder = ROOT / 'results' / args.batch / PRODUCT
     folder.mkdir(parents=True, exist_ok=True)
-    answers = {}
     for page in args.pages.split(','):
-        answers[page] = (ROOT / 'material' / page / 'answer.txt').read_text()
         for inp in args.inputs.split(','):
             started = time.time()
             text, note = transcribe(ROOT / 'material' / page / INPUT_FILE[inp], args.timeout)
@@ -67,7 +65,7 @@ def main(argv=None):
             (folder / f'{page}-{inp}.txt').write_text(text)
             (folder / f'{page}-{inp}.json').write_text(json.dumps(meta, indent=1) + '\n')
             print(f'{page} {inp}: {note} in {meta["duration_s"]}s', flush=True)
-    report(ROOT / 'results' / args.batch, answers)
+    report(ROOT / 'results' / args.batch, all_answers())
 
 
 if __name__ == '__main__':
