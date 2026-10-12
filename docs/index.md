@@ -121,11 +121,11 @@ For a low-resolution source, the first step is unchanged: crop each system and e
 ## Reproduce
 
 ```sh
-git clone <this repository> && cd sheet-music-reading-check
+git clone https://github.com/ui-hyo/sheet-music-reading-check && cd sheet-music-reading-check
 uv venv && uv pip install pillow
 PYTHONPATH=src .venv/bin/python -m sheetcheck.material --style solo --seed 4 --out material/solo-4   # a page nobody has seen
 PYTHONPATH=src python3 -m sheetcheck.run --batch no-tools --pages solo-4 --inputs clean --products claude-code+opus-5.5
 PYTHONPATH=src python3 -m sheetcheck.score material/solo-4/answer.txt results/no-tools/claude-code+opus-5.5/solo-4-clean.txt
 ```
 
-Pages A, B and C are `material/solo-1`, `material/lead-3` and `material/solo-2`. Every reading and its score is under `results/`, and `results/no-tools/NOTES.json` lists what was not measured. The format is described in [FORMAT.md](../FORMAT.md).
+Pages A, B and C are `material/solo-1`, `material/lead-3` and `material/solo-2`. Every reading and its score is under `results/`, and `results/no-tools/NOTES.json` lists what was not measured. The format is described in [FORMAT.md](https://github.com/ui-hyo/sheet-music-reading-check/blob/main/FORMAT.md).

@@ -1,4 +1,4 @@
-"""Draw the figures for docs/article.md from the stored scores.
+"""Draw the figures for docs/index.md from the stored scores.
 
     .venv/bin/python docs/make_figures.py        (needs matplotlib and pillow)
 """

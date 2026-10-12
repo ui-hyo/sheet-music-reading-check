@@ -2,7 +2,7 @@
 
 Small tools for measuring how well an AI agent reads printed sheet music: a text format for a reading, a scorer, a seeded generator of test pages, and a runner for agent CLIs.
 
-Status: first results are in. The write-up is a draft: [docs/article.md](docs/article.md).
+Status: first results are in. The write-up is a draft: [docs/index.md](docs/index.md).
 
 Short version: on three generated pages (522 notes), read with no tools, Claude Opus 5 got 20% of the notes right and Opus 5.5 got 99.8%; GPT-5.6 Sol got 49% and GPT-6.1 Sol got all of them. One run per cell, so treat small differences as noise.
 
