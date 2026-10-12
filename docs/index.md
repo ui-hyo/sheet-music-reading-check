@@ -2,9 +2,9 @@
 
 *Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026.*
 
-I transcribe jazz solos into MuseScore with AI coding agents. Until this summer it went like this. An optical music recognition (OMR) program made a draft. A model reviewed the draft under rules I kept having to add: keep every bar exactly as long as the time signature says, do not touch bars you were not asked about, make sure the result still makes musical sense. The model got notes wrong anyway. In the end I went through the page myself and fixed it note by note.
+I transcribe jazz solos into MuseScore with AI coding agents. Until this summer it went like this. An optical music recognition (OMR) program made a draft. A model reviewed the draft under rules I kept having to add: keep every bar exactly as long as the time signature says, and make sure the result still makes musical sense. The model got notes wrong anyway. In the end I went through the page myself and fixed it note by note.
 
-One model generation later, that work is gone. To check that I was not fooling myself, I measured it on pages generated on the day of the test.
+One model generation later, I no longer fix pages note by note. To check that I was not fooling myself, I measured it on pages generated on the day of the test.
 
 - On three generated pages (522 notes), Claude Opus 5 scored 20%. Opus 5.5, in the same CLI, scored 99.8%. GPT-5.6 Sol scored 49%; GPT-6.1 Sol scored 100%.
 - Haiku 5.5, the smallest model in the current Claude family, scored far higher than Opus 5 on the two pages both read.
