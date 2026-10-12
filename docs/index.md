@@ -1,6 +1,6 @@
 # Sheet-music reading went from 20% to 99.8% in one model generation
 
-*Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026. Draft.*
+*Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026.*
 
 I transcribe jazz solos into MuseScore with AI coding agents. Until this summer it went like this. An optical music recognition (OMR) program made a draft. A model reviewed the draft under rules I kept having to add: keep every bar exactly as long as the time signature says, do not touch bars you were not asked about, make sure the result still makes musical sense. The model got notes wrong anyway. In the end I went through the page myself and fixed it note by note.
 
@@ -48,6 +48,8 @@ Score out of the notes on the page:
 Pages A and C are the harder kind: no key signature, many accidentals, triplets, notes far above the staff. Page B has two flats in the key and simpler rhythm. A dash means I did not run that cell.
 
 Audiveris lost its points to triplets that are not on the page, missed grace notes, and the last bar of each page, which it left out.
+
+Gemini 3.8 Flash and Grok 4.7 are not those vendors' largest models, and they ran through wrapper scripts that give no tool log (see Limits).
 
 ### One generation apart
 
@@ -129,3 +131,7 @@ PYTHONPATH=src python3 -m sheetcheck.score material/solo-4/answer.txt results/no
 ```
 
 Pages A, B and C are `material/solo-1`, `material/lead-3` and `material/solo-2`. Every reading and its score is under `results/`, and `results/no-tools/NOTES.json` lists what was not measured. The format is described in [FORMAT.md](https://github.com/ui-hyo/sheet-music-reading-check/blob/main/FORMAT.md).
+
+---
+
+*I built the tools and drafted this page with AI coding agents. The measurements are in the [repository](https://github.com/ui-hyo/sheet-music-reading-check) for anyone to check.*
