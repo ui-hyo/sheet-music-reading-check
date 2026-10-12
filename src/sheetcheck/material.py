@@ -20,7 +20,7 @@ from PIL import Image
 from . import reading as R
 from .generate import answer_text, make_page
 from .musicxml import read_musicxml, to_reading_text, write_musicxml
-from .score import all_items, norm_chord
+from .score import all_items, chord_items
 
 MSCORE = 'mscore4'
 LOWRES_WIDTH = 620
@@ -51,8 +51,8 @@ def verify(answer: str, roundtrip_path: str) -> list[str]:
             problems.append(f'bar {n}: notes differ')
         if [p.acc for e in a.events for p in e.pitches] != printed[n]:
             problems.append(f'bar {n}: printed accidentals differ')
-        if [norm_chord(s) for _, s in a.chords] != [norm_chord(s) for _, s in g.chords]:
-            problems.append(f'bar {n}: chord symbols differ: {[s for _, s in g.chords]}')
+        if chord_items(a) != chord_items(g):
+            problems.append(f'bar {n}: chord symbols differ: {g.chords}')
     return problems
 
 

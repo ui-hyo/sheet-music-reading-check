@@ -132,6 +132,12 @@ class ScoreTest(unittest.TestCase):
         self.assertNotEqual(norm_chord('C7'), norm_chord('Cmaj7'))
         self.assertEqual(run(ANSWER.replace('1=C-7 |', '1=Cmin7 |').replace('G7(b9)', 'G7'))['chords_matched'], 3)
 
+    def test_chord_on_the_wrong_beat_is_not_a_match(self):
+        s = run(ANSWER.replace('3=G7(b9)', '4=G7(b9)'))
+        self.assertEqual((s['chords_matched'], s['chord_names_matched'], s['bars_chords_exact']), (3, 4, 2))
+        self.assertEqual(run(ANSWER.replace('1=C-7 |', 'x=C-7 |', 1))['chords_matched'], 3)
+        self.assertEqual(run(ANSWER.replace('3=G7(b9)', '3.0=G7b9'))['chords_matched'], 4)
+
     def test_edit_distance(self):
         self.assertEqual(edit_distance(list('kitten'), list('sitting')), 3)
         self.assertEqual(edit_distance([], [1, 2]), 2)

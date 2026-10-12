@@ -13,6 +13,7 @@ import zipfile
 from fractions import Fraction as F
 
 from .generate import ACC_TEXT, Page
+from .reading import parse_dur
 
 DIV = 12
 TYPE_NAME = {'w': 'whole', 'h': 'half', 'q': 'quarter', '8': 'eighth', '16': '16th', '32': '32nd'}
@@ -226,6 +227,9 @@ def _event_token(ev: dict) -> str:
     if ev['type'] not in TYPE_TOKEN or ev['dots'] > 2:
         raise ValueError(f"note value {ev['type']!r} is outside the reading format")
     dur = TYPE_TOKEN[ev['type']] + '.' * ev['dots']
+    written = parse_dur(dur) * (F(ev['tmod'][1], ev['tmod'][0]) if ev['tmod'] else 1)
+    if written != ev['dur']:  # the note value on the page and the time it takes disagree
+        raise ValueError(f"written value {dur} does not last {ev['dur']} quarters")
     return ('R' if ev['kind'] == 'rest' else head) + ':' + dur + ('~' if ev['tie'] else '')
 
 
@@ -239,12 +243,15 @@ def to_reading_text(score: dict, fifths: int | None = None) -> str:
     for bar in score['bars']:
         chords = ' '.join(f'{float(onset + 1):g}={sym}' for onset, sym in bar['chords'])
         try:
-            toks, group, filled = [], None, F(0)
+            toks, group, filled, at = [], None, F(0), F(0)
             for ev in bar['events']:
                 tok = _event_token(ev)
+                if ev['onset'] != at:  # a gap or overlap the one-line format cannot show
+                    raise ValueError(f"event at {ev['onset']} does not follow the previous one")
                 if ev['kind'] == 'grace':
                     toks.append(tok)
                     continue
+                at += ev['dur']
                 if ev['tmod'] and group is None:
                     if ev['tmod'][0] != 3:
                         raise ValueError(f"tuplet {ev['tmod']} is outside the reading format")

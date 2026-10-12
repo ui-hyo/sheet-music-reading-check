@@ -11,6 +11,7 @@ Counting rules:
   every note it contains. A bar the reading adds costs every note it contains.
 - Both sides are resolved with the answer's key signature. Whether the reader
   named the key correctly is reported separately.
+- A chord symbol is right when both its beat and its name match.
 """
 from __future__ import annotations
 
@@ -64,6 +65,17 @@ def chord_syms(bar: R.Bar) -> list[str]:
     return [norm_chord(s) for _, s in bar.chords]
 
 
+def chord_items(bar: R.Bar) -> list[tuple]:
+    """(beat, normalised symbol); a beat that is not a number can never match."""
+    out = []
+    for beat, sym in bar.chords:
+        try:
+            out.append((float(beat), norm_chord(sym)))
+        except ValueError:
+            out.append((beat, norm_chord(sym)))
+    return out
+
+
 def _matched(a: list, b: list) -> int:
     return sum(blk.size for blk in difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks())
 
@@ -72,7 +84,7 @@ def score(answer: R.Reading, got: R.Reading, fifths: int) -> dict:
     R.resolve(answer, fifths)
     R.resolve(got, fifths)
     s = dict.fromkeys(['bars_exact', 'bars_notes_exact', 'bars_rhythm_exact', 'bars_chords_exact', 'notes_total', 'note_errors',
-                       'ties_total', 'ties_found', 'chords_total', 'chords_matched', 'uncertain_events'], 0)
+                       'ties_total', 'ties_found', 'chords_total', 'chords_matched', 'chord_names_matched', 'uncertain_events'], 0)
     wrong, flagged, missing = [], [], []
     a_pitch, g_pitch = [], []
     for n in sorted(answer.bars):
@@ -95,9 +107,10 @@ def score(answer: R.Reading, got: R.Reading, fifths: int) -> dict:
         s['bars_exact'] += all_items(a) == all_items(g)
         s['bars_notes_exact'] += an == gn
         s['bars_rhythm_exact'] += rhythm_items(a) == rhythm_items(g)
-        s['bars_chords_exact'] += chord_syms(a) == chord_syms(g)
+        s['bars_chords_exact'] += chord_items(a) == chord_items(g)
         s['ties_found'] += len(a_ties & {e.onset for e in g.events if e.tie})
-        s['chords_matched'] += _matched(chord_syms(a), chord_syms(g))
+        s['chords_matched'] += _matched(chord_items(a), chord_items(g))  # right symbol on the right beat
+        s['chord_names_matched'] += _matched(chord_syms(a), chord_syms(g))  # right symbol, any beat
         unc = sum(e.unc for e in g.events)
         s['uncertain_events'] += unc
         if an != gn:

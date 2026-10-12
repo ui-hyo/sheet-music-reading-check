@@ -3,9 +3,11 @@
     python3 -m sheetcheck.run --batch no-tools --pages solo-1,lead-3 --inputs clean,lowres --products all
 
 Each run gets a fresh folder outside this repository that holds only the page
-image. While a batch runs, the answers and the generator (`material/`, `src/`)
-are made unreadable, so an agent that wanders cannot find them. Every run keeps
-the CLI's event log where the CLI provides one, so tool use can be audited.
+image. While a batch runs, the whole repository folder (answers, generator, git
+history, earlier results) is made unreadable, and each finished run folder is
+closed too, so an agent that wanders cannot find an answer or another agent's
+reading. Where the CLI provides an event log, every run is checked against the
+rules of its condition and the outcome is stored as `rule_check`.
 
 A "product" here is a model inside its vendor's CLI. Results are about that
 pair, not about the model alone.
@@ -22,6 +24,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import threading
 import time
 
 from . import reading as R
@@ -116,11 +119,15 @@ def _claude(job, d, prompt, timeout, env):
     (d / 'events.jsonl').write_text(out)
     events = _jsonl(out)
     result = next((e for e in reversed(events) if e.get('type') == 'result'), {})
-    tools = [(b.get('name'), os.path.basename(str((b.get('input') or {}).get('file_path', ''))))
-             for e in events if e.get('type') == 'assistant' for b in (e.get('message') or {}).get('content') or []
-             if isinstance(b, dict) and b.get('type') == 'tool_use']
+    tools = []
+    for e in events:
+        for b in (e.get('message') or {}).get('content') or [] if e.get('type') == 'assistant' else []:
+            if isinstance(b, dict) and b.get('type') == 'tool_use':
+                path = str((b.get('input') or {}).get('file_path', ''))
+                inside = path and os.path.realpath(os.path.join(d, path)).startswith(os.path.realpath(d) + os.sep)
+                tools.append([b.get('name'), os.path.basename(path) if inside else 'outside the run folder: ' + os.path.basename(path)])
     ok = code == 0 and not result.get('is_error')
-    return dict(reading=result.get('result') or '', ok=ok, tool_calls=[list(t) for t in tools],
+    return dict(reading=result.get('result') or '', ok=ok, tool_calls=tools,
                 reported_models=sorted(result.get('modelUsage') or {}), stderr=err)
 
 
@@ -154,7 +161,20 @@ def _wrapper(job, d, prompt, timeout, env):
 ADAPTER = {'claude': _claude, 'codex': _codex, 'gemini': _wrapper, 'grok': _wrapper}
 
 
-def run_job(job: dict, batch_dir: pathlib.Path, timeout: int, versions: dict) -> dict:
+def rule_check(vendor: str, tool_calls: list | None, image_name: str) -> str:
+    """'pass', 'violation' or 'unverified' for the look-only condition.
+
+    Claude Code may only read the page image. Codex gets the image attached, so
+    it may not use any tool. A CLI without an event log cannot be checked.
+    """
+    if tool_calls is None:
+        return 'unverified'
+    if vendor == 'claude':
+        return 'pass' if all(call == ['Read', image_name] for call in tool_calls) else 'violation'
+    return 'pass' if not tool_calls else 'violation'
+
+
+def run_job(job: dict, batch_dir: pathlib.Path, timeout: int, versions: dict, hidden: 'Hidden') -> dict:
     p = PRODUCTS[job['product']]
     d = batch_dir / job['id']
     if d.exists():
@@ -171,25 +191,33 @@ def run_job(job: dict, batch_dir: pathlib.Path, timeout: int, versions: dict) ->
         'product': job['product'], 'vendor_cli': p['vendor'], 'cli_version': versions.get(p['vendor']), 'requested_model': p['model'],
         'requested_effort': p['effort'], 'reported_models': r['reported_models'], 'condition': job['condition'], 'page': job['page'],
         'input': job['input'], 'duration_s': round(time.time() - started), 'ok': bool(r['ok'] and r['reading'].strip()),
-        'tool_calls': r['tool_calls'], 'reading_sha256': hashlib.sha256(r['reading'].encode()).hexdigest(),
+        'tool_calls': r['tool_calls'], 'rule_check': rule_check(p['vendor'], r['tool_calls'], job['image_name']),
+        'reading_sha256': hashlib.sha256(r['reading'].encode()).hexdigest(),
     }
     (d / 'reading.txt').write_text(r['reading'])
     (d / 'stderr.log').write_text(r['stderr'][-20000:])
     (d / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
-    print(f"[{time.strftime('%H:%M:%S')}] {job['id']}: {'ok' if meta['ok'] else 'FAILED'} in {meta['duration_s']}s", flush=True)
+    print(f"[{time.strftime('%H:%M:%S')}] {job['id']}: {'ok' if meta['ok'] else 'FAILED'} in {meta['duration_s']}s, rules {meta['rule_check']}", flush=True)
+    hidden.add(d)  # later runs must not find this reading
     return dict(job=job, reading=r['reading'], meta=meta)
 
 
 class Hidden:
-    """Make paths unreadable for the duration of a batch."""
+    """Make folders unreadable for the duration of a batch, and restore them afterwards."""
 
     def __init__(self, paths, enabled=True):
-        self.paths, self.modes = [p for p in paths if enabled], {}
+        self.enabled, self.paths, self.modes, self.lock = enabled, list(paths), {}, threading.Lock()
+
+    def add(self, path: pathlib.Path) -> None:
+        if not self.enabled:
+            return
+        with self.lock:
+            self.modes[path] = path.stat().st_mode & 0o7777
+            path.chmod(0)
 
     def __enter__(self):
         for p in self.paths:
-            self.modes[p] = p.stat().st_mode & 0o7777
-            p.chmod(0)
+            self.add(p)
         return self
 
     def __exit__(self, *exc):
@@ -204,7 +232,7 @@ def main(argv=None):
     ap.add_argument('--inputs', default='clean,lowres')
     ap.add_argument('--products', default='all')
     ap.add_argument('--timeout', type=int, default=2700)
-    ap.add_argument('--no-hide', action='store_true', help='leave material/ and src/ readable (for debugging)')
+    ap.add_argument('--no-hide', action='store_true', help='leave the repository and finished runs readable (for debugging)')
     ap.add_argument('--redo', action='store_true', help='run again even when a successful result exists')
     args = ap.parse_args(argv)
     products = list(PRODUCTS) if args.products == 'all' else args.products.split(',')
@@ -240,14 +268,14 @@ def main(argv=None):
     print(f'{len(jobs)} runs in {len(lanes)} lanes; run folders under {batch_dir}', flush=True)
 
     def lane(items):
-        return [run_job(j, batch_dir, args.timeout, versions) for j in items]
+        return [run_job(j, batch_dir, args.timeout, versions, hidden) for j in items]
 
     def stop(signum, frame):
         raise KeyboardInterrupt
 
     signal.signal(signal.SIGTERM, stop)
     results = []
-    with Hidden([ROOT / 'material', ROOT / 'src'], enabled=not args.no_hide):
+    with Hidden([ROOT], enabled=not args.no_hide) as hidden:
         with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, len(lanes))) as pool:
             for fut in [pool.submit(lane, items) for items in lanes.values()]:
                 results += fut.result()
@@ -268,8 +296,9 @@ def report(out_dir: pathlib.Path, answers: dict[str, str]) -> None:
             continue
         answer = R.parse_text(answers[meta['page']])
         s = score(answer, R.parse_text(meta_path.with_suffix('.txt').read_text()), answer.key)
-        rows.append({**{k: meta[k] for k in ('product', 'page', 'input', 'duration_s', 'ok', 'tool_calls', 'reported_models', 'cli_version')}, **s})
-        print(summary_line(f"{meta['product']} {meta['page']} {meta['input']}", s))
+        rows.append({**{k: meta.get(k) for k in ('product', 'page', 'input', 'duration_s', 'ok', 'rule_check', 'tool_calls', 'reported_models', 'cli_version')}, **s})
+        flag = {'violation': '  RULE VIOLATION', 'unverified': '  (rules unverified)'}.get(meta.get('rule_check'), '') + ('' if meta['ok'] else '  RUN FAILED')
+        print(summary_line(f"{meta['product']} {meta['page']} {meta['input']}", s) + flag)
     (out_dir / 'scores.json').write_text(json.dumps(rows, indent=1, default=str) + '\n')
 
 

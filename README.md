@@ -33,7 +33,9 @@ PYTHONPATH=src python3 -m sheetcheck.omr --pages solo-1,lead-3        # OMR only
 PYTHONPATH=src python3 -m sheetcheck.score material/solo-1/answer.txt some-reading.txt
 ```
 
-Each run happens in a fresh folder outside the repository that holds only the page image. While a batch runs, `material/` and `src/` are made unreadable. If a batch is killed hard, restore them with `chmod 775 material src`.
+Each run happens in a fresh folder outside the repository that holds only the page image. While a batch runs, the repository folder is made unreadable (answers, generator, git history, earlier results), and each finished run folder is closed as well. If a batch is killed hard, restore access with `chmod 775 .` in the repository and `chmod -R u+rwx` on the run folder.
+
+Where the CLI writes an event log, each run is checked against the rules of its condition (`rule_check`: `pass`, `violation`, or `unverified` when the CLI gives no log).
 
 Requirements: Python 3.12, MuseScore 4 as `mscore4` for building pages, Audiveris for the OMR baseline, and the agent CLIs you want to measure.
 

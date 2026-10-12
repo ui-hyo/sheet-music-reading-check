@@ -5,6 +5,7 @@ from pathlib import Path
 
 from sheetcheck import reading as R
 from sheetcheck.generate import answer_text, make_page
+from sheetcheck.material import verify
 from sheetcheck.musicxml import read_musicxml, to_reading_text, write_musicxml
 from sheetcheck.score import all_items, norm_chord, score
 
@@ -46,6 +47,35 @@ class GeneratorTest(unittest.TestCase):
             printed = [x for b in back['bars'] for e in b['events'] for x in e['printed']]
             self.assertEqual(printed, [p.acc for b in ans.bars.values() for e in b.events for p in e.pitches])
             self.assertEqual(score(ans, got, page.fifths)['note_errors'], 0)
+
+
+class VerifyTest(unittest.TestCase):
+    """material.verify must notice when the engraved score and the answer disagree."""
+
+    def problems(self, page, change_xml=None, change_answer=None):
+        xml, answer = write_musicxml(page), answer_text(page)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'page.musicxml'
+            path.write_text(change_xml(xml) if change_xml else xml, encoding='utf-8')
+            return verify(change_answer(answer) if change_answer else answer, str(path))
+
+    def test_agreeing_score_has_no_problems(self):
+        self.assertEqual(self.problems(make_page('solo', 1)), [])
+        self.assertEqual(self.problems(make_page('lead', 3)), [])
+
+    def test_changed_duration_in_the_score_is_found(self):
+        for style, seed, old, new in (('solo', 1, '<duration>6</duration>', '<duration>12</duration>'),
+                                      ('lead', 3, '<duration>12</duration>', '<duration>24</duration>')):
+            found = self.problems(make_page(style, seed), change_xml=lambda x: x.replace(old, new, 1))
+            self.assertTrue(found, (style, seed))
+
+    def test_changed_note_value_in_the_score_is_found(self):
+        found = self.problems(make_page('lead', 3), change_xml=lambda x: x.replace('<type>quarter</type>', '<type>half</type>', 1))
+        self.assertTrue(found)
+
+    def test_chord_symbol_on_another_beat_is_found(self):
+        page = make_page('solo', 1)
+        self.assertTrue(self.problems(page, change_answer=lambda a: a.replace(' 3=', ' 4=', 1)))
 
 
 class ReaderTest(unittest.TestCase):
