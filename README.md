@@ -4,7 +4,7 @@ Small tools for measuring how well an AI agent reads printed sheet music: a text
 
 The write-up with figures: <https://ui-hyo.github.io/sheet-music-reading-check/> (source in [docs/index.md](docs/index.md)).
 
-Short version: on three generated pages (522 notes), read with no tools, Claude Opus 5 got 20% of the notes right and Opus 5.5 got 99.8%; GPT-5.6 Sol got 49% and GPT-6.1 Sol got all of them. One run per cell, so treat small differences as noise.
+Short version: on three generated pages (522 notes), read with no tools, Claude Opus 5 scored 20% and Opus 5.5 scored 99.8%; GPT-5.6 Sol scored 49% and GPT-6.1 Sol scored 100%. One run per cell, so treat small differences as noise. The score is the number of notes in the answer minus the note errors.
 
 ## What is measured
 
