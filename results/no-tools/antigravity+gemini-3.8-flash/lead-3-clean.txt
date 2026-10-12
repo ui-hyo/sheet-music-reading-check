@@ -1,0 +1,34 @@
+key: -2
+time: 4/4
+m1 | chords: 1=Am7(b5) 3=D7b9 | events: {3 C5:q D5:q E5:q} F5:h
+m2 | chords: 1=Gm7 | events: G4:q G5:q D5:q C5:8 B4:8
+m3 | chords: 1=Cm7 | events: C5:q R:q G5:h
+m4 | chords: 1=D7b9 | events: R:h F#5:8 D5:8 C5:8 B4:8
+m5 | chords: 1=Am7(b5) 3=D7b9 | events: D5:h~ {3 D5:q C5:q D5:q}
+m6 | chords: 1=Gm7 | events: D5:q. C5:8~ C5:8 D5:8 B4:q
+m7 | chords: 1=Gm7 | events: Bn4:h D5:8 F5:8 D5:q~
+m8 | chords: | events: D5:8 B4:8 D5:8 G4:8 G4:h
+m9 | chords: 1=Gm7 | events: {3 Bn4:8 C#5:8 D5:8~} D5:q F5:8 D5:8 B4:q
+m10 | chords: 1=Am7(b5) 3=D7b9 | events: R:q C5:q D5:h
+m11 | chords: 1=Gm7 | events: D5:h C5:q R:q
+m12 | chords: 1=Ebmaj7 | events: R:q R:8 D5:8 C5:q R:q
+m13 | chords: 1=Bbmaj7 3=G7b9 | events: F4:8 B4:8 D5:8 F5:8 D5:h
+m14 | chords: 1=Cm7 | events: E5:q C5:q G5:h
+m15 | chords: 1=F7 | events: F5:q. D5:8~ D5:q C5:q
+m16 | chords: 1=Bb6 | events: D5:h F4:q B4:q
+m17 | chords: 1=Bbmaj7 3=G7b9 | events: F4:q B4:8 D5:8 F5:h
+m18 | chords: 1=Cm7 | events: E5:q C5:q {16 D5:16 C5:16 B#4:16 C5:16} # len=11/4
+m19 | chords: 1=F7 | events: R:q D5:q~ D5:h
+m20 | chords: 1=Bb6 | events: D5:h F4:8 B4:8 D5:q
+m21 | chords: 1=Gm7 | events: G4:q D5:8 G5:8 D5:q C5:q
+m22 | chords: 1=Am7(b5) 3=D7b9 | events: R:q R:8 C5:8~ C5:h
+m23 | chords: 1=Gm7 | events: R:q Bn4:8 D5:8 F5:q D5:q
+m24 | chords: 1=Ebmaj7 | events: D5:q. Db5:8 C5:8 B4:8 C5:8 D5:8
+m25 | chords: 1=Gm7 3=C7 | events: R:h Bn4:8 C5:8 D5:q
+m26 | chords: 1=Fmaj7 | events: F5:h. R:8 A4:8 # len=9/8
+m27 | chords: 1=Dm7 | events: D5:8 F5:8 An5:8 C6:8 D6:h
+m28 | chords: 1=Gm7 3=C7 | events: G4:q B4:8 D5:8 Db5:8 C5:8 B4:q
+m29 | chords: 1=Bbmaj7 | events: R:8 G4:8 B4:q D5:h
+m30 | chords: 1=Gm7 | events: R:q G4:q B4:8 D5:8 D5:q
+m31 | chords: 1=Cm7 | events: E5:q D5:8 C5:8~ C5:8 D5:8 E5:q
+m32 | chords: 1=F7 | events: C5:w

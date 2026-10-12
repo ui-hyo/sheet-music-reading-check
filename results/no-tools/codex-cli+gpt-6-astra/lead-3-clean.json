@@ -1,0 +1,16 @@
+{
+ "product": "codex-cli+gpt-6-astra",
+ "vendor_cli": "codex",
+ "cli_version": "codex-cli 0.162.1",
+ "requested_model": "gpt-6-astra",
+ "requested_effort": "max",
+ "reported_models": [],
+ "condition": "no-tools",
+ "page": "lead-3",
+ "input": "clean",
+ "duration_s": 187,
+ "ok": true,
+ "tool_calls": [],
+ "rule_check": "pass",
+ "reading_sha256": "386d189e6f88238f9eef60dbf2a6a9fda838795b7e1493229ee75e990c106f10"
+}

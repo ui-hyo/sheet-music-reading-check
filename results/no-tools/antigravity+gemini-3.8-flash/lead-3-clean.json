@@ -1,0 +1,16 @@
+{
+ "product": "antigravity+gemini-3.8-flash",
+ "vendor_cli": "gemini",
+ "cli_version": "1.3.3",
+ "requested_model": "Gemini 3.8 Flash (High)",
+ "requested_effort": null,
+ "reported_models": [],
+ "condition": "no-tools",
+ "page": "lead-3",
+ "input": "clean",
+ "duration_s": 401,
+ "ok": true,
+ "tool_calls": null,
+ "rule_check": "unverified",
+ "reading_sha256": "cf39b41f970f56fade79c272ec8aa73bfbb7e1f36418ee22d9deff26539cd579"
+}

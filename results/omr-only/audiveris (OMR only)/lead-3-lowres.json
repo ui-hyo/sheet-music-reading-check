@@ -1,0 +1,11 @@
+{
+ "product": "audiveris (OMR only)",
+ "page": "lead-3",
+ "input": "lowres",
+ "duration_s": 1,
+ "ok": false,
+ "tool_calls": null,
+ "reported_models": [],
+ "cli_version": "-version                    : Display version then stop",
+ "note": "no export (exit 1)"
+}

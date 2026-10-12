@@ -1,0 +1,23 @@
+{
+ "product": "claude-code+sonnet-5.5",
+ "vendor_cli": "claude",
+ "cli_version": "2.1.296 (Claude Code)",
+ "requested_model": "claude-sonnet-5-5",
+ "requested_effort": "xhigh",
+ "reported_models": [
+  "claude-sonnet-5-5"
+ ],
+ "condition": "no-tools",
+ "page": "solo-1",
+ "input": "lowres",
+ "duration_s": 118,
+ "ok": true,
+ "tool_calls": [
+  [
+   "Read",
+   "page.jpg"
+  ]
+ ],
+ "rule_check": "pass",
+ "reading_sha256": "1a868f12bb1945a7a6a61c8639f6da281d3e039592366605d719fb1574c791fe"
+}

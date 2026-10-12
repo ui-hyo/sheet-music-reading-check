@@ -1,0 +1,33 @@
+key: None
+time: 4/4
+m1 | chords:  | events: R:h Db5:8 Cn5:8 Bb4:8 Ab4:8
+m2 | chords:  | events: R:q Gn4:q Cn4:q Db4:8 Fn4:8
+m3 | chords:  | events: Gb4:8 Ab4:8 Bb4:8 Eb5:8~ Eb5:q An4:8 Bb4:8~
+m4 | chords:  | events: Bb4:8 Cn5:8 Db5:q Eb5:q Cn5:q
+m5 | chords:  | events: Db5:16 Fn5:16 Cn5:16 Db5:16 Cn5:q Ab4:q~ Ab4:8 Fn4:8
+m6 | chords:  | events: Eb4:q. Cn4:8 Eb4:8 Cn5:8 Db5:8 Eb5:8
+m7 | chords:  | events: Cn6:8 Dn6:8 Eb6:8 Dn6:8 Fb6:q Eb6:8 Cn6:8
+m8 | chords:  | events: Bb5:16 Ab5:16 Db6:16 Bb5:16 Ab5:q {3 Fb5:8 Eb5:8 Ab5:8} Gn5:8 Ab5:8
+m9 | chords:  | events: An5:16 Bb5:16~ Bb5:16 An5:16 Gn5:q Fn5:8 Dn5:8 En5:q~
+m10 | chords:  | events: En5:8 Dn5:8 Bb4:q Cn5:h
+m11 | chords:  | events: R:8 Fn5:8 En5:q G#5:q {3 An5:8 Gn5:8 An5:8}
+m12 | chords:  | events: R:q Cn5:8 An4:8 {3 Dn4:q Cn4:q En4:q~}
+m13 | chords:  | events: En4:8 F#4:16 En4:16 Bn4:8 Dn5:8 R:q C#5:q
+m14 | chords:  | events: Dn5:q. Bn4:8 En4:8~ En4:8 C#5:q
+m15 | chords:  | events: R:8 Dn5:8 En5:8 F#5:8 Ab5:q Gn5:8 F#5:8
+m16 | chords:  | events: R:q Gn5:q A#5:q En5:8~ En5:8
+m17 | chords:  | events: Db5:q Eb5:q~ Eb5:8 Bb5:8 Db6:q
+m18 | chords:  | events: Gb5:q. Fn5:8 R:q An5:8 Gb5:8
+m19 | chords:  | events: Eb5:q Fn5:8~ Fn5:8 {3 Ab5:8 Db6:8 Bb5:8} Cn6:q
+m20 | chords:  | events: {3 Ab5:8~ Ab5:8 Gb5:8~} Gb5:8~ Gb5:8 Eb5:q. Fn5:8
+m21 | chords:  | events: {3 Gn5:8 Bn5:8 Cn6:8} Dn6:8 Bn5:8 F#5:8 Gn5:16 Fn5:16~ Fn5:8 En5:8
+m22 | chords:  | events: Gn5:q~ Gn5:8 Fn5:8 {3 D#5:8 En5:8 An4:8} Cn5:q
+m23 | chords:  | events: An4:q. Cn5:8 R:h
+m24 | chords:  | events: R:q Dn5:q C#5:16 Dn5:16 En5:16 Fn5:16 Gn5:q
+m25 | chords:  | events: Bn5:q An5:q R:q Bn5:q
+m26 | chords:  | events: Dn6:8 En6:8~ En6:8 Dn6:8~ Dn6:8 C#6:8 Bn5:8 En5:8
+m27 | chords:  | events: R:h Bn4:q Cn5:q
+m28 | chords:  | events: Bn4:8 Dn5:8 En5:8 F#5:8~ F#5:8 Gn5:16 An5:16 Cn5:8~ Cn5:8
+m29 | chords:  | events: Bn4:q {3 Cn5:8 An4:8 Gn4:8} G#4:8 An4:8 Bn4:q
+m30 | unreadable: tuplet (6, 4) is outside the reading format
+m31 | chords:  | events: Db5:8 Cn5:8 Gn5:q An5:q F#5:8 Gn5:8

@@ -1,0 +1,36 @@
+```
+key: -2
+time: 4/4
+m1 | chords: 1=Dbmaj7 | events: R:h Db5:8 C5:8 Bb4:8 Ab4:8
+m2 | chords: 1=Bbm7 | events: R:q G4:q C5:q Db5:8 F5:8
+m3 | chords: 1=Ebm7 | events: Gb4:8 Ab4:8 Bb4:q Eb5:h~
+m4 | chords: 1=Ab7 | events: Eb5:q Db5:8 C5:8 Bb4:q Ab4:q
+m5 | chords: 1=Bbm7 | events: Bb4:16 F5:16 Db5:16 C5:16 Bb4:q Ab4:q~ Ab4:8 F4:8
+m6 | chords: 1=Eb7 | events: Ab4:8 Bb4:8 C5:8 Db5:8 Eb5:q C5:8 Bb4:8
+m7 | chords: 1=Abmaj7 | events: Eb5:h. C5:8 Bb4:8
+m8 | chords: 1=Fm7 | events: C5:8 Db5:8 Eb5:8 Eb5:8 Eb5:q Db5:8 Eb5:8
+m9 | chords: 1=Gm7 | events: Bb4:8~ Bb4:16 Ab4:16 G4:q F4:8 D4:8 Eb4:q
+m10 | chords: 1=C7 | events: Eb5:8 D5:8 Bb4:q C5:h
+m11 | chords: 1=Fmaj7 | events: R:8 F5:8 E5:q G#5:q {3 A5:8 G5:8 A5:8}
+m12 | chords: 1=F6 | events: R:q C5:8 A4:8 {3 D4:q C4:q E4:q~}
+m13 | chords: 1=C#m7(b5) | events: E4:8~ E4:8 F#4:16 E4:16 B4:8 D5:8 B4:8 F#4:8 R:8 # len=4.0
+m14 | chords: 1=F#7b9 | events: D5:h. B4:8 E4:8
+m15 | chords: 1=Bm7 | events: R:8 D5:8 E5:8 F#5:8 Ab5:q G5:8 F#5:8
+m16 | chords: 1=Em7 3=F#7b9 | events: R:q G5:q A#5:q E5:q
+m17 | chords: 1=Ebm7 | events: Db5:q Eb5:8~ Eb5:8 Bb5:q Db6:q
+m18 | chords: 1=Ab7 | events: g(Ab4) Gb4:q F5:8 R:8 Ab5:8 G5:8 F5:q
+m19 | chords: 1=Dbmaj7 | events: Eb5:q F5:8 Eb5:8 {3 Ab5:q Bb5:q C6:q}
+m20 | chords: 1=Db6 | events: {3 Ab5:8 Gb5:8 Ab5:8} Gb5:8 Ab5:8 Gb5:8 Ab5:8 Eb5:q
+m21 | chords: 1=Dm7 3=G7 | events: {3 G5:8 Bb5:8 C6:8} D6:8 F#5:8 G5:8 F5:8 E5:8 C5:q
+m22 | chords: 1=Cmaj7 | events: C#5:16 D5:16 E5:16 F5:16 G5:h G5:q
+m23 | chords: 1=Am7 | events: G5:q~ G5:8 F5:8 {3 D#5:8 C#5:8 A4:8} C5:q
+m24 | chords: 1=Dm7 3=G7 | events: A4:q. C5:8 R:h
+m25 | chords: 1=Gmaj7 | events: B5:q A5:q R:q B5:q
+m26 | chords: 1=Em7 | events: E6:8~ E6:8 D6:8~ D6:8 C#6:8 B5:8 E5:q
+m27 | chords: 1=Am7 | events: R:h B4:q C5:q
+m28 | chords: 1=D7 | events: D5:8 E5:8 F#5:8~ F#5:8 G5:16 A5:16 C6:q B5:8
+m29 | chords: 1=Am7 | events: B4:q C5:8 {3 A4:8 G4:8 G#4:8} A4:8 B4:q
+m30 | chords: 1=Bm7(b5) | events: G4:q D4:8 C4:8 R:8 E4:8 D4:8 G#4:8
+m31 | chords: 1=E7b9 3=Am7 | events: E5:8 D5:8 G#4:8 A4:8 Bb4:h
+m32 | chords: 1=Fmaj7 | events: F5:w
+```

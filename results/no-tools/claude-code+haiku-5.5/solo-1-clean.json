@@ -1,0 +1,23 @@
+{
+ "product": "claude-code+haiku-5.5",
+ "vendor_cli": "claude",
+ "cli_version": "2.1.296 (Claude Code)",
+ "requested_model": "claude-haiku-5-5",
+ "requested_effort": null,
+ "reported_models": [
+  "claude-haiku-5-5"
+ ],
+ "condition": "no-tools",
+ "page": "solo-1",
+ "input": "clean",
+ "duration_s": 64,
+ "ok": true,
+ "tool_calls": [
+  [
+   "Read",
+   "page.png"
+  ]
+ ],
+ "rule_check": "pass",
+ "reading_sha256": "2c517c7c0a035f2e8bc9ca24b0607de37c9374f9ea57a1f2ce3223299f048650"
+}

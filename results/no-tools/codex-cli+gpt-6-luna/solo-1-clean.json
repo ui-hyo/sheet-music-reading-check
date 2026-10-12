@@ -1,0 +1,16 @@
+{
+ "product": "codex-cli+gpt-6-luna",
+ "vendor_cli": "codex",
+ "cli_version": "codex-cli 0.162.1",
+ "requested_model": "gpt-6-luna",
+ "requested_effort": "max",
+ "reported_models": [],
+ "condition": "no-tools",
+ "page": "solo-1",
+ "input": "clean",
+ "duration_s": 264,
+ "ok": true,
+ "tool_calls": [],
+ "rule_check": "pass",
+ "reading_sha256": "3a29a9f4aa7aa5f8076d727d78ef3c8b66e0420cc270da524bc18cc43892d293"
+}

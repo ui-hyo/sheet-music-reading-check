@@ -1,0 +1,34 @@
+악보 이미지를 한 번만 열어 32마디를 읽겠습니다.key: -1
+time: 4/4
+m1 | chords: 1=Dbmaj7 | events: R:h Db5:8 C5:8 B4:8 A4:8
+m2 | chords: 1=Bbm7 | events: R:q G4:q C4:q D4:8 F4:8
+m3 | chords: 1=Ebm7 | events: Gb4:8 Ab4:8 B4:8 C5:8 Eb5:h
+m4 | chords: 1=Ab7 | events: B4:q C5:8 Db5:8 Eb5:q C5:q
+m5 | chords: 1=Bbm7 | events: Db5:8 C5:8 D5:8 C5:8 A4:h
+m6 | chords: 1=Eb7 | events: A4:h G4:q F4:q
+m7 | chords: 1=Abmaj7 | events: E4:h C5:8 D5:8 Eb5:8 F5:8
+m8 | chords: 1=Fm7 | events: C5:8 D5:8 Eb5:8 En5:8 F5:h
+m9 | chords: 1=Gm7 | events: Ab5:8 G5:8 A5:8 G5:8 F5:h
+m10 | chords: 1=C7 | events: E5:q B4:h C5:q
+m11 | chords: 1=Fmaj7 | events: R:q F5:q {3 G5:8 A5:8 G#5:8} A5:q
+m12 | chords: 1=F6 | events: R:8 C5:q A4:8 D5:q {3 E5:8 F5:8 G5:8}
+m13 | chords: 1=C#m7(b5) | events: E4:8 D#4:8 C#4:q R:q G#4:q
+m14 | chords: 1=F#7b9 | events: R:q A#4:8 C#5:8 E5:8 F#5:8 G5:q
+m15 | chords: 1=Bm7 | events: D5:h Bn4:8 A4:8 G4:8 F#4:8
+m16 | chords: 1=Em7 | events: R:q D5:8 E5:8 F#5:q G5:q
+m17 | chords: 1=Ebm7 | events: D5:q Eb5:h B4:8 Ab4:8
+m18 | chords: 1=Ab7 | events: Gb5:8 Ab5:8 R:q A5:8 G5:8 F5:q
+m19 | chords: 1=Dbmaj7 | events: Eb5:q F5:8 G5:8 {3 Ab5:8 B5:8 A5:8} G5:q
+m20 | chords: 1=Db6 | events: {3 B5:8 Ab5:8 Gb5:8} A5:h F5:q
+m21 | chords: 1=Dm7 | events: {3 G4:8 A4:8 Bn4:8} D5:q F#5:8 G5:8 A5:8 G5:8
+m22 | chords: 1=G7 | events: G5:8 F#5:8 Fn5:8 E5:8 D5:8 C5:8 Bn4:8 A4:8
+m23 | chords: 1=Cmaj7 | events: G5:q F5:8 E5:8 {3 D5:8 C#5:8 D5:8} Cn5:q
+m24 | chords: 1=Am7 | events: A4:h. C5:q
+m25 | chords: 1=Dm7 3=G7 | events: R:8 D5:8 E5:8 F#5:8 G5:q A5:8 G5:8
+m26 | chords: 1=Gmaj7 | events: Bn4:q A4:q R:q B4:q
+m27 | chords: 1=Em7 | events: D6:8 C#6:8 Bn5:8 A5:8 G5:h
+m28 | chords: 1=Am7 3=D7 | events: R:h Bn4:q C5:q
+m29 | chords: 1=Am7 | events: Bn4:q {3 E5:8 G#5:8 Bn5:8} A5:h
+m30 | chords: 1=Bm7(b5) 3=E7b9 | events: D5:h Bn4:q R:8 G#4:8
+m31 | chords: 1=Am7 | events: Eb5:8 C5:8 A5:8 F#5:8 G5:h
+m32 | chords: 1=Fmaj7 | events: F5:w

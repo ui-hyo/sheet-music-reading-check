@@ -1,0 +1,23 @@
+{
+ "product": "claude-code+opus-5",
+ "vendor_cli": "claude",
+ "cli_version": "2.1.296 (Claude Code)",
+ "requested_model": "claude-opus-5",
+ "requested_effort": "xhigh",
+ "reported_models": [
+  "claude-opus-5"
+ ],
+ "condition": "no-tools",
+ "page": "solo-1",
+ "input": "clean",
+ "duration_s": 851,
+ "ok": true,
+ "tool_calls": [
+  [
+   "Read",
+   "page.png"
+  ]
+ ],
+ "rule_check": "pass",
+ "reading_sha256": "3b88dfac32b96b47b3341d4c9b9c78397ace8c9afce17f39ea1094a4da5c9852"
+}

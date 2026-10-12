@@ -1,0 +1,16 @@
+{
+ "product": "grok-cli+grok-4.7",
+ "vendor_cli": "grok",
+ "cli_version": "grok 1.0.50 (c58f321264ba) [stable]",
+ "requested_model": "grok-4.7",
+ "requested_effort": "xhigh",
+ "reported_models": [],
+ "condition": "no-tools",
+ "page": "solo-1",
+ "input": "clean",
+ "duration_s": 1316,
+ "ok": true,
+ "tool_calls": null,
+ "rule_check": "unverified",
+ "reading_sha256": "b5b6e30f9bc7c0a1e4ddf91d2cd32e9493f0ee250f2ce8b513b240f817224659"
+}

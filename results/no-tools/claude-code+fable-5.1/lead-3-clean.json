@@ -1,0 +1,23 @@
+{
+ "product": "claude-code+fable-5.1",
+ "vendor_cli": "claude",
+ "cli_version": "2.1.296 (Claude Code)",
+ "requested_model": "claude-fable-5-1",
+ "requested_effort": "xhigh",
+ "reported_models": [
+  "claude-fable-5-1"
+ ],
+ "condition": "no-tools",
+ "page": "lead-3",
+ "input": "clean",
+ "duration_s": 216,
+ "ok": true,
+ "tool_calls": [
+  [
+   "Read",
+   "page.png"
+  ]
+ ],
+ "rule_check": "pass",
+ "reading_sha256": "4cdb2ae0652751eafa16b78775df2ef81f24827a5caec0d6012351e6c112b744"
+}

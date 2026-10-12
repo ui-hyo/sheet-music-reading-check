@@ -1,0 +1,23 @@
+{
+ "batch": "no-tools",
+ "date": "2026-10-12",
+ "condition": "look only: the agent may open the page image and nothing else; one run per cell",
+ "pages": {
+  "solo-1": "186 notes, no key signature",
+  "lead-3": "137 notes, two flats"
+ },
+ "inputs": {
+  "clean": "2481x3508 PNG (300 dpi)",
+  "lowres": "620x877 JPEG"
+ },
+ "not_measured": [
+  "claude-code+fable-5.1 solo-1 clean: no answer within the 45 minute limit (stored as a failed run)",
+  "claude-code+fable-5.1 lowres: left out after that timeout",
+  "codex-cli+gpt-5.6-sol and grok-cli+grok-4.7 solo-1 lowres: stopped by the operator while running",
+  "codex-cli+gpt-6.1-sol and codex-cli+gpt-6-astra solo-1 lowres: not started",
+  "lead-3 lowres: not run for any product"
+ ],
+ "rule_check": "Claude Code and Codex CLI runs are checked against their event logs. Antigravity and Grok CLI were called through local wrapper scripts that give no tool log, so those runs are 'unverified'.",
+ "operator_access_during_batch": "To score finished runs early, the operator made the repository readable three times for about 10 ms each (15:22:23, 15:22:48, 15:57:54 local time). Only Claude Code runs with the model claude-fable-5-1 were active at those times; their logs show a single read of the page image.",
+ "efforts": "Claude Code xhigh (haiku: CLI default), Codex CLI max, Grok CLI xhigh, Antigravity model label 'Gemini 3.8 Flash (High)'"
+}
