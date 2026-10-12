@@ -1,0 +1,24 @@
+{
+ "style": "lead",
+ "seed": 3,
+ "engraving_style": "MuseJazz.mss",
+ "key_fifths": -2,
+ "bars": 32,
+ "notes": 137,
+ "clean_size": [
+  2481,
+  3508
+ ],
+ "lowres_size": [
+  620,
+  877
+ ],
+ "verified": true,
+ "musescore": "MuseScore4 4.7.5",
+ "sha256": {
+  "answer.txt": "01f883791de504068f63ca0c2192b32935e030e7569016a2f6be6057d65d1216",
+  "page.musicxml": "4e31af8f19c779e371a91760a9f95bb9852ac4dc2875ac394670e70e253f15d5",
+  "clean.png": "0f9e74e60b2472d607294767774782c767134957e67738a0e485b13c83e17222",
+  "lowres.jpg": "68b3d9cb3c02c0b9623fe40c3c8c991bdc6b4a96beea240a41897c8f19939d10"
+ }
+}

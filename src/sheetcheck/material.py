@@ -56,7 +56,7 @@ def verify(answer: str, roundtrip_path: str) -> list[str]:
     return problems
 
 
-def build(style: str, seed: int, out: pathlib.Path) -> dict:
+def build(style: str, seed: int, out: pathlib.Path, mss: pathlib.Path | None = None) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     page = make_page(style, seed)
     answer = answer_text(page)
@@ -64,7 +64,8 @@ def build(style: str, seed: int, out: pathlib.Path) -> dict:
     (out / 'page.musicxml').write_text(write_musicxml(page), encoding='utf-8')
     for old in out.glob('render-*.png'):
         old.unlink()
-    _mscore('-o', str(out / 'page.mscz'), str(out / 'page.musicxml'))
+    # An optional MuseScore style file changes the look (for example a handwritten music font), never the notes.
+    _mscore(*(['-S', str(mss)] if mss else []), '-o', str(out / 'page.mscz'), str(out / 'page.musicxml'))
     _mscore('-o', str(out / 'page.pdf'), str(out / 'page.mscz'))
     _mscore('-o', str(out / 'render.png'), '-r', '300', str(out / 'page.mscz'))
     _mscore('-o', str(out / 'roundtrip.musicxml'), str(out / 'page.mscz'))
@@ -81,7 +82,7 @@ def build(style: str, seed: int, out: pathlib.Path) -> dict:
     problems = verify(answer, str(out / 'roundtrip.musicxml'))
     notes = sum(1 for b in R.parse_text(answer).bars.values() for e in b.events if e.kind != 'rest')
     meta = {
-        'style': style, 'seed': seed, 'key_fifths': page.fifths, 'bars': len(page.bars), 'notes': notes,
+        'style': style, 'seed': seed, 'engraving_style': mss.name if mss else 'MuseScore default', 'key_fifths': page.fifths, 'bars': len(page.bars), 'notes': notes,
         'clean_size': flat.size, 'lowres_size': small.size, 'verified': not problems,
         'musescore': subprocess.run([MSCORE, '--version'], capture_output=True, text=True).stdout.strip(),
         'sha256': {f: hashlib.sha256((out / f).read_bytes()).hexdigest() for f in ('answer.txt', 'page.musicxml', 'clean.png', 'lowres.jpg')},
@@ -95,8 +96,9 @@ def main(argv=None):
     ap.add_argument('--style', choices=['solo', 'lead'], required=True)
     ap.add_argument('--seed', type=int, required=True)
     ap.add_argument('--out', type=pathlib.Path, required=True)
+    ap.add_argument('--mss', type=pathlib.Path, help='MuseScore style file to engrave with')
     args = ap.parse_args(argv)
-    result = build(args.style, args.seed, args.out)
+    result = build(args.style, args.seed, args.out, args.mss)
     m = result['meta']
     print(f"{args.out}: key {m['key_fifths']}, {m['bars']} bars, {m['notes']} notes, clean {m['clean_size']}, lowres {m['lowres_size']}")
     for p in result['problems']:

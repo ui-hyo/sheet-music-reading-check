@@ -234,6 +234,8 @@ def main(argv=None):
     ap.add_argument('--timeout', type=int, default=2700)
     ap.add_argument('--no-hide', action='store_true', help='leave the repository and finished runs readable (for debugging)')
     ap.add_argument('--redo', action='store_true', help='run again even when a successful result exists')
+    ap.add_argument('--parallel-by', choices=['vendor', 'product'], default='vendor',
+                    help='what runs side by side: one lane per vendor CLI (default) or one per product')
     args = ap.parse_args(argv)
     products = list(PRODUCTS) if args.products == 'all' else args.products.split(',')
     unknown = [p for p in products if p not in PRODUCTS]
@@ -264,7 +266,7 @@ def main(argv=None):
     batch_dir.mkdir(parents=True, exist_ok=True)
     lanes: dict[str, list[dict]] = {}
     for j in jobs:
-        lanes.setdefault(PRODUCTS[j['product']]['vendor'], []).append(j)
+        lanes.setdefault(PRODUCTS[j['product']]['vendor'] if args.parallel_by == 'vendor' else j['product'], []).append(j)
     print(f'{len(jobs)} runs in {len(lanes)} lanes; run folders under {batch_dir}', flush=True)
 
     def lane(items):
