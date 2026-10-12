@@ -74,7 +74,7 @@ A reader's own `?` marks do not replace the second reading. In the clean default
 
 ## Limits
 
-- **Not yet used on a real transcription.** Everything above was run on the generated pages of the measurement.
+- **Not yet used on a real transcription.** The comparisons above were run on the generated pages of the measurement.
 - **One line in 4/4** is what was tested. A pickup bar, or any other bar whose length differs from the time signature in the header, is listed as a bar that does not add up. That is a prompt to look, not an error.
 - **Not tested:** real handwriting, piano music, more than one voice.
 - **The comparison narrows the checking.** It does not prove the unlisted bars are right.
