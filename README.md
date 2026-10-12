@@ -1,4 +1,4 @@
-# sheet-reading-check
+# sheet-music-reading-check
 
 Small tools for measuring how well an AI agent reads printed sheet music: a text format for a reading, a scorer, a seeded generator of test pages, and a runner for agent CLIs.
 

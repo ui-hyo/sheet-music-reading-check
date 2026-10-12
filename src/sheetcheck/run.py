@@ -31,7 +31,7 @@ from . import reading as R
 from .score import score, summary_line
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-CACHE = pathlib.Path(os.environ.get('SHEETCHECK_RUN_DIR', '~/.cache/sheet-reading-check')).expanduser()
+CACHE = pathlib.Path(os.environ.get('SHEETCHECK_RUN_DIR', '~/.cache/sheet-music-reading-check')).expanduser()
 INPUT_FILE = {'clean': 'clean.png', 'lowres': 'lowres.jpg'}
 
 # name -> vendor CLI, model as that CLI names it, reasoning effort (None = CLI default).

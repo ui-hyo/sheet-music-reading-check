@@ -113,7 +113,7 @@ For a low-resolution source, the first step is unchanged: crop each system and e
 ## Reproduce
 
 ```sh
-git clone <this repository> && cd sheet-reading-check
+git clone <this repository> && cd sheet-music-reading-check
 uv venv && uv pip install pillow
 PYTHONPATH=src .venv/bin/python -m sheetcheck.material --style solo --seed 4 --out material/solo-4   # a page nobody has seen
 PYTHONPATH=src python3 -m sheetcheck.run --batch no-tools --pages solo-4 --inputs clean --products claude-code+opus-5.5
