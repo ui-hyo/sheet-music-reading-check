@@ -1,0 +1,23 @@
+{
+ "style": "solo",
+ "seed": 1,
+ "key_fifths": 0,
+ "bars": 32,
+ "notes": 186,
+ "clean_size": [
+  2481,
+  3508
+ ],
+ "lowres_size": [
+  620,
+  877
+ ],
+ "verified": true,
+ "musescore": "MuseScore4 4.7.5",
+ "sha256": {
+  "answer.txt": "d15c72d60de0f042e409ef3494c963d9d3d52d72bae5fa904d273a6979396627",
+  "page.musicxml": "eb3df881627dbe9b3f9e9b4e12c1a8ed4fdf3dee80fead6c98302da5d68ef9be",
+  "clean.png": "7076c5cdaff5e1a6f0faa6a671be29b471dd51a1434857427e0607a1024a6c7f",
+  "lowres.jpg": "332dcf0351eb5c16edcf1bbaaf6a52680f88348a1ac61975824773eeeb557b8e"
+ }
+}
