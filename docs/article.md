@@ -96,7 +96,7 @@ My guess is that music notation, or something close to it, became part of traini
 
 ## What this changed in how I work
 
-Before, the model could not be trusted to read pitches. My notes from August say a model reading a page on its own got 62 of 138 pitches right, on a page where the OMR program got all 138. So the OMR draft came first, the model repaired it bar by bar inside a harness of checks, and I proofread everything.
+Before, the model could not be trusted to read pitches. My notes from August say Gemini 3.7 Flash, reading a page on its own, got 62 of 138 pitches right on a page where the OMR program got all 138. So the OMR draft came first, the model repaired it bar by bar inside a harness of checks, and I proofread everything.
 
 Now, for a clean print:
 
