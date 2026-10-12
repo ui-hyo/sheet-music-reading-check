@@ -100,13 +100,15 @@ My guess is that music notation, or something close to it, became part of traini
 
 Before, the model could not be trusted to read pitches. My notes from August say Gemini 3.7 Flash, reading a page on its own, got 62 of 138 pitches right on a page where the OMR program got all 138. So the OMR draft came first, the model repaired it bar by bar inside a harness of checks, and I proofread everything.
 
-For a clean print, the measurement points to a simpler procedure. I have not used it on a real transcription yet:
+For a clean print, the measurement points to a simpler procedure:
 
 1. Two models from different vendors read the page independently.
 2. A program compares the two readings bar by bar.
 3. A person looks only at the bars where they differ.
 
 The steps, with the command for the comparison, are on [a separate page](workflow.md).
+
+Since the measurement I have used it once on a real transcription, a 468-bar jazz guitar part with chords, printed with tablature. The list was much longer there: 161 of the 358 written bars. The tablature, read separately, settled all but three of the bars where the notes differed, and an agent checked those three against the enlarged source. It also showed 20 notes under an 8va line that both models had read an octave low in the same way. [What happened](workflow.md#one-real-use) is on that page.
 
 On page A, leaving the `?` marks aside, the readings of Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars where one of them was wrong. Two readers can still share an error, so agreement narrows the checking without proving anything.
 

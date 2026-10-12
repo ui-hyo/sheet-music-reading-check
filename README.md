@@ -48,7 +48,7 @@ PYTHONPATH=src python3 -m sheetcheck.compare reading-a.txt reading-b.txt     # l
 PYTHONPATH=src python3 -m sheetcheck.musicxml score.musicxml > score.txt     # MusicXML (OMR or MuseScore export) as a reading
 ```
 
-`compare` lists a bar when the readings disagree on it, when a reader marked it with `?`, when it does not add up to the time signature, or when a reading has no usable line for it. The procedure around it is in [docs/workflow.md](docs/workflow.md). It has been run on the stored readings here, not yet on a real transcription.
+`compare` lists a bar when the readings disagree on it, when a reader marked it with `?`, when it does not add up to the time signature, or when a reading has no usable line for it. The procedure around it is in [docs/workflow.md](docs/workflow.md). It has been run on the stored readings here and used once on a real transcription, which that page describes.
 
 ## Requirements
 
