@@ -61,7 +61,7 @@ def generations_figure():
     pages = [('solo-1', 'page A'), ('lead-3', 'page B'), ('solo-2', 'page C')]
     pairs = [('Claude Code', 'claude-code+opus-5', 'Opus 5', 'claude-code+opus-5.5', 'Opus 5.5'),
              ('Codex CLI', 'codex-cli+gpt-5.6-sol', 'GPT-5.6 Sol', 'codex-cli+gpt-6.1-sol', 'GPT-6.1 Sol')]
-    fig, axes = plt.subplots(1, 2, figsize=(9, 3.6), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(9, 4.0), sharey=True)
     for ax, (cli, old, old_name, new, new_name) in zip(axes, pairs):
         x = range(len(pages))
         a = ax.bar([i - 0.2 for i in x], [pct(old, p) for p, _ in pages], 0.4, color=GREY, label=old_name)
@@ -69,7 +69,8 @@ def generations_figure():
         for bar in list(a) + list(b):
             ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1.5, f'{bar.get_height():.0f}%', ha='center', fontsize=8)
         ax.set_xticks(list(x)); ax.set_xticklabels([n for _, n in pages]); ax.set_ylim(0, 112)
-        ax.set_title(cli, fontsize=10); ax.legend(frameon=False, fontsize=8, loc='center left')
+        ax.set_title(cli, fontsize=10)
+        ax.legend(frameon=False, fontsize=9, loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=2)
         ax.spines[['top', 'right']].set_visible(False)
     axes[0].set_ylabel('notes read right (%)')
     fig.suptitle('One model generation apart, same pages, same CLI', fontsize=11)
@@ -77,7 +78,7 @@ def generations_figure():
 
 
 def paired_figure(filename, title, products, left, right, left_label, right_label, missing):
-    fig, ax = plt.subplots(figsize=(8, 0.55 * len(products) + 1.6))
+    fig, ax = plt.subplots(figsize=(8, 0.55 * len(products) + 2.1))
     y = range(len(products))
     lv, rv = [pct(p, *left) for p in products], [pct(p, *right) for p in products]
     a = ax.barh([i + 0.2 for i in y], [v or 0 for v in lv], 0.4, color=BLUE, label=left_label)
@@ -85,7 +86,7 @@ def paired_figure(filename, title, products, left, right, left_label, right_labe
     label_bars(ax, a, lv); label_bars(ax, b, rv, missing=missing)
     ax.set_yticks(list(y)); ax.set_yticklabels([NAME[p] for p in products]); ax.invert_yaxis()
     ax.set_xlim(0, 118); ax.set_xlabel('notes read right (%)'); ax.set_title(title, fontsize=10)
-    ax.legend(frameon=False, fontsize=8, loc='lower right'); ax.spines[['top', 'right']].set_visible(False)
+    ax.legend(frameon=False, fontsize=9, loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=2); ax.spines[['top', 'right']].set_visible(False)
     fig.tight_layout(); fig.savefig(OUT / filename, dpi=160); plt.close(fig)
 
 
