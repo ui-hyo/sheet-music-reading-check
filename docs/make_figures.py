@@ -51,7 +51,7 @@ def products_figure():
         vals = [pct(p, page) for p in order]
         bars = ax.barh([NAME[p] for p in order], [v or 0 for v in vals], color=[colour(p) for p in order])
         label_bars(ax, bars, vals, missing='no answer in 45 min')
-        ax.set_xlim(0, 112); ax.set_xlabel('notes read right (%)'); ax.set_title(title, fontsize=9)
+        ax.set_xlim(0, 112); ax.set_xlabel('score (% of the notes on the page)'); ax.set_title(title, fontsize=9)
         ax.spines[['top', 'right']].set_visible(False)
     fig.suptitle('Reading one printed page with no tools, one run each', fontsize=11)
     fig.tight_layout(); fig.savefig(OUT / 'products.png', dpi=160); plt.close(fig)
@@ -72,7 +72,7 @@ def generations_figure():
         ax.set_title(cli, fontsize=10)
         ax.legend(frameon=False, fontsize=9, loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=2)
         ax.spines[['top', 'right']].set_visible(False)
-    axes[0].set_ylabel('notes read right (%)')
+    axes[0].set_ylabel('score (% of the notes on the page)')
     fig.suptitle('One model generation apart, same pages, same CLI', fontsize=11)
     fig.tight_layout(); fig.savefig(OUT / 'generations.png', dpi=160); plt.close(fig)
 
@@ -85,7 +85,7 @@ def paired_figure(filename, title, products, left, right, left_label, right_labe
     b = ax.barh([i - 0.2 for i in y], [v or 0 for v in rv], 0.4, color=LIGHT, label=right_label)
     label_bars(ax, a, lv); label_bars(ax, b, rv, missing=missing)
     ax.set_yticks(list(y)); ax.set_yticklabels([NAME[p] for p in products]); ax.invert_yaxis()
-    ax.set_xlim(0, 118); ax.set_xlabel('notes read right (%)'); ax.set_title(title, fontsize=10)
+    ax.set_xlim(0, 118); ax.set_xlabel('score (% of the notes on the page)'); ax.set_title(title, fontsize=10)
     ax.legend(frameon=False, fontsize=9, loc='upper center', bbox_to_anchor=(0.5, -0.22), ncol=2); ax.spines[['top', 'right']].set_visible(False)
     fig.tight_layout(); fig.savefig(OUT / filename, dpi=160); plt.close(fig)
 

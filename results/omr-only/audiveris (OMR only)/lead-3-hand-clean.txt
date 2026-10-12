@@ -19,7 +19,7 @@ m16 | chords:  | events: R:h Dn3:q An3:q
 m17 | chords:  | events: Bb3:q Eb3:8 Bb3:8 Cn4:h
 m18 | chords:  | events: Eb4:8 Dn4:8 Cn4:q Bb3:8~ Bb3:8 F#3:8 Gn3:8
 m19 | chords:  | events: An3:q Bb3:q~ Bb3:q Cn4:q
-m20 | unreadable: tuplet (6, 4) is outside the reading format
+m20 | chords:  | events: {3 Fn4:h Bb3:8 Gn4:8} Eb4:q
 m21 | chords:  | events: R:q Bb3:q An3:8 Dn4:8 Cn4:q
 m22 | chords:  | events: R:8 [Eb3+Cn4]:q Dn4:q~ Dn4:q.
 m23 | chords:  | events: An4:q Gn4:8 En4:8 Dn4:q Bb3:q

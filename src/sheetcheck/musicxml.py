@@ -253,7 +253,8 @@ def to_reading_text(score: dict, fifths: int | None = None) -> str:
                     continue
                 at += ev['dur']
                 if ev['tmod'] and group is None:
-                    if ev['tmod'][0] != 3:
+                    # 6:4 and 12:8 are how some programs write a run of triplets; the timing is the same as 3:2.
+                    if ev['tmod'][0] * 2 != ev['tmod'][1] * 3:
                         raise ValueError(f"tuplet {ev['tmod']} is outside the reading format")
                     toks.append('{3')
                     group, filled = True, F(0)

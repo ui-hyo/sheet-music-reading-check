@@ -79,6 +79,28 @@ class VerifyTest(unittest.TestCase):
 
 
 class ReaderTest(unittest.TestCase):
+    def test_six_in_the_time_of_four_is_read_as_triplets(self):
+        # Audiveris exports runs of triplet eighths as 6:4; the timing equals 3:2 and must not cost the bar.
+        page = make_page('solo', 1)
+        back = read_back(page)
+        changed = 0
+        for bar in back['bars']:
+            for ev in bar['events']:
+                if ev['tmod'] == (3, 2):
+                    ev['tmod'] = (6, 4)
+                    changed += 1
+        self.assertGreater(changed, 0)
+        got = R.parse_text(to_reading_text(back))
+        self.assertEqual(got.unparsed, [])
+        self.assertEqual(score(R.parse_text(answer_text(page)), got, page.fifths)['note_errors'], 0)
+
+    def test_other_tuplets_are_still_outside_the_format(self):
+        page = make_page('solo', 1)
+        back = read_back(page)
+        ev = next(e for b in back['bars'] for e in b['events'] if e['tmod'])
+        ev['tmod'] = (5, 4)
+        self.assertEqual(len(R.parse_text(to_reading_text(back)).unparsed), 1)
+
     def test_bar_outside_the_format_becomes_an_unread_bar(self):
         page = make_page('lead', 3)
         back = read_back(page)

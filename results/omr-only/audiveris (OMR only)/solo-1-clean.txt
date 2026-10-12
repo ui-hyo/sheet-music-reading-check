@@ -29,5 +29,5 @@ m26 | chords:  | events: Dn6:8 En6:8~ En6:8 Dn6:8~ Dn6:8 C#6:8 Bn5:8 En5:8
 m27 | chords:  | events: R:h Bn4:q Cn5:q
 m28 | chords:  | events: Bn4:8 Dn5:8 En5:8 F#5:8~ F#5:8 Gn5:16 An5:16 Cn5:8~ Cn5:8
 m29 | chords:  | events: Bn4:q {3 Cn5:8 An4:8 Gn4:8} G#4:8 An4:8 Bn4:q
-m30 | unreadable: tuplet (6, 4) is outside the reading format
+m30 | chords:  | events: Gn4:q {3 Dn4:8 Cn4:8 R:8} {3 En4:8 Dn4:8 G#4:8}
 m31 | chords:  | events: Db5:8 Cn5:8 Gn5:q An5:q F#5:8 Gn5:8

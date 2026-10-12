@@ -1,30 +1,34 @@
 # Sheet-music reading went from 20% to 99.8% in one model generation
 
-*Draft. All numbers are from 12 October 2026, one run per cell.*
+*Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026. Draft.*
 
-I transcribe jazz solos into MuseScore with AI coding agents. Until this summer I worked by one rule: do not trust the model's eyes for pitches. An optical music recognition (OMR) program produced the draft, and the model only repaired it. In August a model reading a page on its own got 62 of 138 pitches right on a page where the OMR program got all 138.
+I transcribe jazz solos into MuseScore with AI coding agents. Until this summer I worked by one rule: do not trust the model's eyes for pitches. An optical music recognition (OMR) program produced the draft, and the model only repaired it. My notes from August say a model reading a page on its own got 62 of 138 pitches right, on a page where the OMR program got all 138.
 
-This month I tested that rule on pages no model can have seen before. It no longer holds.
+This month I tested that rule on pages generated on the day of the test. It no longer holds.
 
-- On three freshly generated pages (522 notes), Claude Opus 5 read 20% of the notes correctly. Opus 5.5, in the same CLI, read 99.8%. GPT-5.6 Sol read 49%; GPT-6.1 Sol read all 522.
-- The smallest current Claude model, Haiku 5.5, reads far better than the previous flagship.
-- The best current models, with no tools at all, are more accurate than the OMR program I used to rely on.
+- On three generated pages (522 notes), Claude Opus 5 scored 20%. Opus 5.5, in the same CLI, scored 99.8%. GPT-5.6 Sol scored 49%; GPT-6.1 Sol scored 100%.
+- Haiku 5.5, the smallest model in the current Claude family, scored far higher than Opus 5 on the two pages both read.
+- On these pages the best current models, only looking at the image, scored higher than the OMR program I used to rely on.
 
-![Notes read right by each product on two pages](img/products.png)
+![Score of each product on two pages](img/products.png)
 
 ## What I measured
 
-**The pages.** A script generates each page from a random seed: one melodic line in 4/4 with chord symbols, 32 bars, in the style of a jazz line (scale runs, approach notes, triplets, ties, rests). The music is in no training set and has no copyright owner. MuseScore engraves the page. A second program then reads back the MusicXML that MuseScore exports and compares it with the answer, including every accidental MuseScore chose to print, so the answer and the image cannot drift apart.
+If you don't read music: a bar is a short group of beats, a system is one row of music across the page, and the height of a note on the five lines gives its pitch.
+
+**The pages.** A script generates each page from a random seed: one melodic line in 4/4 with chord symbols, 32 bars, in the style of a jazz line (scale runs, triplets, ties, rests, many sharps and flats). The pages were made for this test, after every model here was released, so none of them can have been memorised. MuseScore, a notation program, engraves the page. A second program then reads back the MusicXML file that MuseScore exports from the engraved score and compares it with the answer, including every accidental MuseScore chose to print. That check works on MuseScore's own description of what it drew, not on the pixels.
 
 **The task.** The agent gets the page image and returns one line of text per bar: pitches, note values, ties, triplets and chord symbols. It may look at the image and do nothing else. Claude Code runs with only its file-reading tool. Codex CLI gets the image attached and a read-only sandbox. I checked the tool logs of every Claude Code and Codex run: one read of the image, or no tool use.
 
-**The score.** A note is right when its position in the bar, its pitch and its length all match. Errors are counted as an edit distance per bar, so a wrong, missing or extra note costs one. A bar the agent skipped costs all its notes.
+**The score.** A note is right when its position in the bar, its pitch and its length all match. Errors are counted as an edit distance per bar, so a wrong, missing or extra note costs one, and a skipped bar costs all its notes. The score for a page is the number of notes in the answer minus those errors, never below zero. For the weaker products this is lower than the count of notes they got right, because extra notes cost too. Pitches are worked out with the answer's key signature. Whether the agent named the key, the ties and the chord symbols are scored separately.
 
 **The products.** A "product" is a model inside its vendor's CLI, at the reasoning effort I normally use (Claude Code: xhigh, with Haiku at the CLI default; Codex CLI: max). The results describe that pair, not the model alone.
 
 Everything is one run per cell. Read small differences as noise.
 
 ## Results
+
+Score out of the notes on the page:
 
 | Product | Page A (186 notes) | Page B (137) | Page C (199) |
 |---|---|---|---|
@@ -39,25 +43,27 @@ Everything is one run per cell. Read small differences as noise.
 | Claude Code · Opus 5 (previous generation) | 20 | 56 | 30 |
 | Grok CLI · Grok 4.7 | 8 | 37 | – |
 | Antigravity · Gemini 3.8 Flash | 10 | 0 | – |
-| Audiveris 5.11 (OMR, no language model) | 177 | 120 | 190 |
+| Audiveris 5.11 (OMR, no language model) | 178 | 122 | 192 |
 
-Page A and page C are the harder kind: no key signature, many accidentals, triplets, ledger lines. Page B has two flats in the key and simpler rhythm. A dash means I did not run that cell.
+Pages A and C are the harder kind: no key signature, many accidentals, triplets, notes far above the staff. Page B has two flats in the key and simpler rhythm. A dash means I did not run that cell.
+
+Audiveris lost its points to triplets that are not on the page, missed grace notes, and the last bar of each page, which it left out.
 
 ### One generation apart
 
 ![Previous and current generation on three pages](img/generations.png)
 
-The gap shows on all three pages for both vendors. Scale alone does not explain it: Haiku 5.5 reads 81% and 99% of pages A and B, where Opus 5 reads 11% and 41%.
+The gap shows on all three pages for both pairs. Model size alone does not explain it: Haiku 5.5 scored 81% and 99% on pages A and B, where Opus 5 scored 11% and 41%.
 
-The previous-generation models read every chord symbol on all three pages. Text was never the problem. What changed is reading where a notehead sits on the staff.
+The previous-generation models read every chord symbol on all three pages, so plain text was not their problem. Their errors are in the notes.
 
 ### The errors that remain
 
-The best models now make the kind of slip a person makes when sight-reading.
+In these runs the best models' remaining errors were single wrong pitches.
 
 ![Opus 5.5 read the circled F flat as D flat](img/misread-bar8.png)
 
-Opus 5.5 made one error on page A: it read the circled F♭ as D♭, a third too low. D♭ is a chord tone of the E♭7 above it. F♭ is not.
+Opus 5.5 made one error on page A: it read the circled F♭ as D♭, a lower note. D♭ belongs to the chord printed above it (E♭7). F♭ does not.
 
 ![GPT-6 Astra read the three circled notes one step low](img/misread-bar27.png)
 
@@ -67,13 +73,13 @@ GPT-6 Astra read these three notes one step low. Neither model marked these note
 
 ![The same page at 300 dpi and at 620 pixels wide](img/lowres.png)
 
-I shrank page A to 620 pixels wide, about what a screen capture of a PDF gives you. Opus 5.5 fell to 77%, and the OMR program produced no output. The agents were not allowed to zoom here. In real work I let them crop and enlarge each system first.
+I shrank page A to a 620×877 JPEG. Opus 5.5 fell to 77%, and Audiveris exported nothing. The agents were not allowed to zoom here. In real work I let them crop and enlarge each system first.
 
 ### A handwritten-style font
 
 ![Default font and handwritten-style font](img/font.png)
 
-To see whether the models had only learned one engraving style, I re-engraved pages A and B with MuseScore's MuseJazz style, which imitates handwriting. The notes are identical. GPT-6.1 Sol still read every note on both pages. Opus 5.5 dropped from 185 to 168 on page A and from 137 to 136 on page B. The OMR program fell apart completely.
+To see whether the models had only learned one engraving style, I re-engraved pages A and B with MuseScore's MuseJazz style, which imitates handwriting. The notes are identical. GPT-6.1 Sol again scored 100% on both pages. Opus 5.5 dropped from 185 to 168 on page A and from 137 to 136 on page B. Audiveris got no bar right on either page.
 
 This is a font, not handwriting. I did not test real handwritten scores.
 
@@ -81,12 +87,12 @@ This is a font, not handwriting. I did not test real handwritten scores.
 
 I don't know. Here is what the numbers allow.
 
-- **It is not scale.** The smallest model of the current Claude family beats the largest of the previous one.
-- **Two vendors moved in the same generation.** The Gemini and Grok models I tested did not, but I tested Gemini 3.8 Flash and Grok 4.7 through their CLIs, not every model those vendors have.
-- **It is not one font.** GPT-6.1 Sol reads a handwritten-style font as well as the default one.
-- **It is recent.** A [blog post from May](https://www.artfish.ai/p/can-ai-read-music-part-2) found that Opus 4.7, GPT 5.4 and Gemini 3.0 Pro could not reliably name a single note. A [paper from July](https://arxiv.org/abs/2607.05769) found Gemini 3.1 Pro far behind a dedicated OMR model.
+- **Model size alone does not explain it.** Haiku 5.5 outscored Opus 5 by a wide margin.
+- **Both pairs I tested moved.** Opus and Sol each jumped between consecutive versions. I did not test older Gemini or Grok models, so I cannot say whether those moved. The two I did test, Gemini 3.8 Flash and Grok 4.7, scored low.
+- **GPT-6.1 Sol handled both engraving styles** I tried.
+- **Earlier public tests point the same way**, on different material. A [blog post from May](https://www.artfish.ai/p/can-ai-read-music-part-2) found that Opus 4.7, GPT 5.4 and Gemini 3.0 Pro could not reliably name a single note. A [paper from July](https://arxiv.org/abs/2607.05769) found Gemini 3.1 Pro far behind a dedicated OMR model.
 
-My guess is that music notation, or something close to it, became part of training or evaluation between these generations. Pages like mine are cheap to make in any quantity from symbolic music, which is all my generator does. A general gain in fine-grained vision would look the same from outside, though, and I found no release note that mentions either. If you know what changed, I would like to hear it.
+My guess is that music notation, or something close to it, became part of training or evaluation between these versions. Pages like mine are cheap to make in any quantity from symbolic music, which is all my generator does. A general gain in fine-grained vision would look the same from outside, though, and I did not separate the CLI's image handling, perception and reasoning. I found no release note that mentions any of it. If you know what changed, I would like to hear it.
 
 ## What this changed in how I work
 
@@ -98,7 +104,9 @@ Now, for a clean print:
 2. A program compares the two readings bar by bar.
 3. I look only at the bars where they differ.
 
-On page A, Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars one of them got wrong. A model's own `?` marks are not enough for this. On these pages Opus 5.5, Astra and Haiku 5.5 left their wrong notes unmarked, and Sonnet 5.5 marked two of its four wrong bars on page A.
+On page A, leaving the `?` marks aside, the readings of Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars where one of them was wrong. Two readers can still share an error, so agreement narrows the checking without proving anything.
+
+A model's own `?` marks did not do this job. In the clean default-font runs, Opus 5.5, Astra and Haiku 5.5 left their wrong notes unmarked, and Sonnet 5.5 marked two of its four wrong bars on page A. The marks were better on harder input: on the low-resolution page Opus 5.5 marked 11 of its 13 wrong bars.
 
 The automatic checks stay: every bar must add up to the time signature, and the MusicXML must survive a round trip through MuseScore. OMR is still useful on a clean print as a cheap third reading.
 
