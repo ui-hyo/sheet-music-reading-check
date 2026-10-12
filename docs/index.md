@@ -96,15 +96,15 @@ I don't know. Here is what the numbers allow.
 
 My guess is that music notation, or something close to it, became part of training or evaluation between these versions. Pages like mine are cheap to make in any quantity from symbolic music, which is all my generator does. A general gain in fine-grained vision would look the same from outside, though, and I did not separate the CLI's image handling, perception and reasoning. I found no release note that mentions any of it. If you know what changed, I would like to hear it.
 
-## What this changed in how I work
+## What this changes in how I work
 
 Before, the model could not be trusted to read pitches. My notes from August say Gemini 3.7 Flash, reading a page on its own, got 62 of 138 pitches right on a page where the OMR program got all 138. So the OMR draft came first, the model repaired it bar by bar inside a harness of checks, and I proofread everything.
 
-Now, for a clean print:
+For a clean print, the measurement points to a simpler procedure. I have not used it on a real transcription yet:
 
 1. Two models from different vendors read the page independently.
 2. A program compares the two readings bar by bar.
-3. I look only at the bars where they differ.
+3. A person looks only at the bars where they differ.
 
 The steps, with the command for the comparison, are on [a separate page](workflow.md).
 

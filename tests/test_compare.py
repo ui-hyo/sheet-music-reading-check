@@ -75,11 +75,30 @@ class CompareTest(unittest.TestCase):
         self.assertEqual(listed(A, A.replace('3=F7', '4=F7')), {1: ['chord symbols differ']})
         self.assertEqual(listed(A, A.replace('1=Cm7', '1=C-7').replace('Bbmaj7', 'BbM7')), {})
 
-    def test_reading_without_chord_symbols_is_left_out_of_the_chord_comparison(self):
+    def test_reading_without_chord_symbols_is_left_out_only_when_asked(self):
         bare = '\n'.join(line.split('| chords:')[0] + '| chords: |' + line.split('|')[2] if line.startswith('m') else line for line in A.splitlines())
+        # A score that lost every chord symbol on the way through MuseScore must not pass as equal.
+        self.assertEqual(listed(A, bare), {n: ['chord symbols differ'] for n in (1, 2, 3)})
         result = compare([R.parse_text(A), R.parse_text(A), R.parse_text(bare)])
-        self.assertEqual((result['check'], result['remarks']), ([], ['no chord symbols in c; chord symbols compared among the rest']))
-        self.assertEqual(listed(A, A.replace('3=F7', '4=F7'), bare), {1: ['chord symbols differ']})
+        self.assertEqual([item['bar'] for item in result['check']], [1, 2, 3])
+        self.assertIn('leave it out with --no-chords c', result['remarks'][0])
+        # An OMR export has none to begin with: the caller says so, and the other two are still compared.
+        self.assertEqual(listed(A, A, bare, no_chords='c'), {})
+        self.assertEqual(listed(A, A.replace('3=F7', '4=F7'), bare, no_chords='c'), {1: ['chord symbols differ']})
+        with self.assertRaises(ValueError):
+            listed(A, A, no_chords='c')
+
+    def test_bar_that_no_reading_has_is_listed_when_later_bars_exist(self):
+        gap = '\n'.join(line for line in A.splitlines() if not line.startswith('m2 '))
+        self.assertEqual(listed(gap, gap), {2: ['in no reading']})
+
+    def test_reading_without_any_bar_line_is_an_error_not_an_empty_list(self):
+        for text in ('', 'key: 0\ntime: 4/4\nm1: C4:w\n'):
+            with self.assertRaises(ValueError):
+                listed(A, text)
+
+    def test_stray_brace_makes_the_line_unusable(self):
+        self.assertEqual(listed(A, A.replace('{3 F5:8', '{ F5:8')), {1: ['the line in b cannot be parsed']})
 
     def test_any_one_of_three_readings_that_differs_lists_the_bar(self):
         self.assertEqual(listed(A, A, A.replace('A5:q.', 'B5:q.')), {2: ['notes differ at beat 1']})
@@ -107,12 +126,18 @@ class CommandTest(unittest.TestCase):
             a.write_text(A)
             b.write_text('Here is my reading.\n```\n' + A.replace('G4:8 C5:8', 'G4:8 B4:8') + '```\n')
             text = cli(str(a), str(b))
-            self.assertIn('key -2, time 4/4, 3 bars', text)
+            self.assertIn('key -2, time 4/4, 3 bars (m1 to m3)', text)
             self.assertIn('1 bar to check: 1\n\nm1: notes differ at beat 2.5\n  a  m1 | chords: 1=Cm7 3=F7 | events: R:q G4:8 C5:8', text)
             self.assertIn('0 bars to check\n', cli(str(a), str(a)))
             got = json.loads(cli(str(a), str(b), '--json'))
             self.assertEqual((got['readings'], got['bars'], got['check'][0]['bar']), ({'a': str(a), 'b': str(b)}, 3, 1))
             self.assertEqual(sorted(got['check'][0]['lines']), ['a', 'b'])
+            empty = pathlib.Path(tmp, 'empty.txt')
+            empty.write_text('I could not read the page.\n')
+            with self.assertRaises(SystemExit) as stop, contextlib.redirect_stderr(io.StringIO()) as err:
+                main([str(a), str(empty)])
+            self.assertEqual(stop.exception.code, 2)
+            self.assertIn('no bar lines in reading b', err.getvalue())
 
     def test_musicxml_command_prints_a_reading_that_agrees_with_the_answer(self):
         page = ROOT / 'material' / 'lead-3'
@@ -159,7 +184,7 @@ class StoredReadingsTest(unittest.TestCase):
         sizes = []
         for page in ('solo-1', 'lead-3', 'solo-2'):
             pair = [self.reading('claude-code+opus-5.5', page), self.reading('codex-cli+gpt-6.1-sol', page)]
-            two, three = set(listed(*pair)), set(listed(*pair, self.audiveris(page)))
+            two, three = set(listed(*pair)), set(listed(*pair, self.audiveris(page), no_chords='c'))
             sizes.append((len(two), len(three)))
             self.assertEqual(three - two, self.wrong_bars(self.audiveris(page), page) - two)
         self.assertEqual(sizes, [(2, 5), (0, 4), (0, 3)])
@@ -169,7 +194,7 @@ class StoredReadingsTest(unittest.TestCase):
             ta, tb = self.reading(a, page), self.reading(b, page)
             self.assertIn(bar, self.wrong_bars(ta, page) & self.wrong_bars(tb, page))
             self.assertNotIn(bar, listed(ta, tb))
-            self.assertIn(bar, listed(ta, tb, self.audiveris(page)))
+            self.assertEqual(listed(ta, tb, self.audiveris(page), no_chords='c')[bar][0][:12], 'notes differ')
 
 
 if __name__ == '__main__':

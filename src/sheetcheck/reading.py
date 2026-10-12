@@ -94,7 +94,7 @@ def parse_dur(tok: str) -> F:
 
 
 def _tokens(text: str) -> list[str]:
-    return re.findall(r'\{\d+|\}\??|[^\s{}]+', text)
+    return re.findall(r'\{\d*|\}\??|[^\s{}]+', text)
 
 
 def parse_events(text: str) -> list[Event]:
@@ -106,6 +106,8 @@ def parse_events(text: str) -> list[Event]:
         if tok.startswith('{'):
             if group_start is not None:
                 raise ReadingError('nested tuplet')
+            if tok == '{':
+                raise ReadingError('tuplet without a number')
             n = int(tok[1:])
             if n not in TUPLET_NORMAL:
                 raise ReadingError(f'unsupported tuplet {n}')

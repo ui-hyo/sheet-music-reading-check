@@ -48,7 +48,7 @@ class ParseTest(unittest.TestCase):
         self.assertEqual((sorted(r.bars), len(r.unparsed)), ([1], 2))
 
     def test_rejects_malformed_events(self):
-        for bad in ['{3 C5:8 D5:8', 'C5:8}', 'R:q~', 'g(C5)', 'C5', '{4 C5:8}', '{3 {3 C5:8} D5:8}']:
+        for bad in ['{3 C5:8 D5:8', 'C5:8}', 'R:q~', 'g(C5)', 'C5', '{4 C5:8}', '{3 {3 C5:8} D5:8}', '{ C5:8 D5:8 E5:8}', '{ C5:w']:
             with self.assertRaises(R.ReadingError, msg=bad):
                 R.parse_events(bad)
 
