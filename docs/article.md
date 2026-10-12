@@ -2,9 +2,9 @@
 
 *Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026. Draft.*
 
-I transcribe jazz solos into MuseScore with AI coding agents. Until this summer I worked by one rule: do not trust the model's eyes for pitches. An optical music recognition (OMR) program produced the draft, and the model only repaired it. My notes from August say a model reading a page on its own got 62 of 138 pitches right, on a page where the OMR program got all 138.
+I transcribe jazz solos into MuseScore with AI coding agents. Until this summer it went like this. An optical music recognition (OMR) program made a draft. A model reviewed the draft under rules I kept having to add: keep every bar exactly as long as the time signature says, do not touch bars you were not asked about, make sure the result still makes musical sense. The model got notes wrong anyway. In the end I went through the page myself and fixed it note by note.
 
-This month I tested that rule on pages generated on the day of the test. It no longer holds.
+One model generation later, that work is gone. To check that I was not fooling myself, I measured it on pages generated on the day of the test.
 
 - On three generated pages (522 notes), Claude Opus 5 scored 20%. Opus 5.5, in the same CLI, scored 99.8%. GPT-5.6 Sol scored 49%; GPT-6.1 Sol scored 100%.
 - Haiku 5.5, the smallest model in the current Claude family, scored far higher than Opus 5 on the two pages both read.
@@ -96,7 +96,7 @@ My guess is that music notation, or something close to it, became part of traini
 
 ## What this changed in how I work
 
-Before: OMR draft, then the model repairs it bar by bar, then automatic checks.
+Before, the model could not be trusted to read pitches. My notes from August say a model reading a page on its own got 62 of 138 pitches right, on a page where the OMR program got all 138. So the OMR draft came first, the model repaired it bar by bar inside a harness of checks, and I proofread everything.
 
 Now, for a clean print:
 
