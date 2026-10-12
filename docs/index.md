@@ -106,6 +106,8 @@ Now, for a clean print:
 2. A program compares the two readings bar by bar.
 3. I look only at the bars where they differ.
 
+The steps, with the command for the comparison, are on [a separate page](workflow.md).
+
 On page A, leaving the `?` marks aside, the readings of Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars where one of them was wrong. Two readers can still share an error, so agreement narrows the checking without proving anything.
 
 A model's own `?` marks did not do this job. In the clean default-font runs, Opus 5.5, Astra and Haiku 5.5 left their wrong notes unmarked, and Sonnet 5.5 marked two of its four wrong bars on page A. The marks were better on harder input: on the low-resolution page Opus 5.5 marked 11 of its 13 wrong bars.

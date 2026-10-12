@@ -1,5 +1,7 @@
 """Write a generated page as MusicXML, and read MusicXML back into the reading format.
 
+    python3 -m sheetcheck.musicxml score.musicxml > score.txt
+
 The reader is written independently of the writer and of `reading.resolve`: it
 takes pitches from <alter>, never from accidental rules. That lets it check the
 generated pages after a round trip through MuseScore, and score the output of
@@ -7,7 +9,9 @@ an OMR program.
 """
 from __future__ import annotations
 
+import argparse
 import io
+import sys
 import xml.etree.ElementTree as ET
 import zipfile
 from fractions import Fraction as F
@@ -273,3 +277,13 @@ def to_reading_text(score: dict, fifths: int | None = None) -> str:
         except ValueError as exc:
             lines.append(f"m{bar['number']} | unreadable: {exc}")
     return '\n'.join(lines) + '\n'
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description='Print a MusicXML file (.musicxml or .mxl) in the reading format: first part, first voice.')
+    ap.add_argument('path')
+    sys.stdout.write(to_reading_text(read_musicxml(ap.parse_args(argv).path)))
+
+
+if __name__ == '__main__':
+    main()

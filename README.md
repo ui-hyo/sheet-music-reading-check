@@ -1,6 +1,6 @@
 # sheet-music-reading-check
 
-Small tools for measuring how well an AI agent reads printed sheet music: a text format for a reading, a scorer, a seeded generator of test pages, and a runner for agent CLIs.
+Small tools for measuring how well an AI agent reads printed sheet music: a text format for a reading, a scorer, a seeded generator of test pages, and a runner for agent CLIs. There is also a command that compares two readings of a page and lists the bars a person should check.
 
 The write-up with figures: <https://ui-hyo.github.io/sheet-music-reading-check/> (source in [docs/index.md](docs/index.md)).
 
@@ -41,7 +41,18 @@ Each run happens in a fresh folder outside the repository that holds only the pa
 
 Where the CLI writes an event log, each run is checked against the rules of its condition (`rule_check`: `pass`, `violation`, or `unverified` when the CLI gives no log).
 
-Requirements: Python 3.12, MuseScore 4 as `mscore4` for building pages, Audiveris for the OMR baseline, and the agent CLIs you want to measure.
+## Using it for transcription
+
+```sh
+PYTHONPATH=src python3 -m sheetcheck.compare reading-a.txt reading-b.txt     # list the bars to check
+PYTHONPATH=src python3 -m sheetcheck.musicxml score.musicxml > score.txt     # MusicXML (OMR or MuseScore export) as a reading
+```
+
+`compare` lists a bar when the readings disagree on it, when a reader marked it with `?`, when it does not add up to the time signature, or when a reading has no usable line for it. The procedure around it is in [docs/workflow.md](docs/workflow.md).
+
+## Requirements
+
+Python 3.12, MuseScore 4 as `mscore4` for building pages, Audiveris for the OMR baseline, and the agent CLIs you want to measure.
 
 ## Tests
 
