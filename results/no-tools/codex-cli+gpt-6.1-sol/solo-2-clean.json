@@ -1,0 +1,16 @@
+{
+ "product": "codex-cli+gpt-6.1-sol",
+ "vendor_cli": "codex",
+ "cli_version": "codex-cli 0.162.1",
+ "requested_model": "gpt-6.1-sol",
+ "requested_effort": "max",
+ "reported_models": [],
+ "condition": "no-tools",
+ "page": "solo-2",
+ "input": "clean",
+ "duration_s": 399,
+ "ok": true,
+ "tool_calls": [],
+ "rule_check": "pass",
+ "reading_sha256": "27268272df60019bd2ecf55c2e5f8656b4ec6d10724e93939f57c6c3dad2d2b6"
+}

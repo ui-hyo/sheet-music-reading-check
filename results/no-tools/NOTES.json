@@ -4,7 +4,10 @@
  "condition": "look only: the agent may open the page image and nothing else; one run per cell",
  "pages": {
   "solo-1": "186 notes, no key signature",
-  "lead-3": "137 notes, two flats"
+  "lead-3": "137 notes, two flats",
+  "solo-2": "199 notes, no key signature (second seed, added for the generation comparison)",
+  "solo-1-hand": "same notes as solo-1, engraved with the MuseJazz handwritten-style font",
+  "lead-3-hand": "same notes as lead-3, engraved with the MuseJazz handwritten-style font"
  },
  "inputs": {
   "clean": "2481x3508 PNG (300 dpi)",
@@ -19,5 +22,6 @@
  ],
  "rule_check": "Claude Code and Codex CLI runs are checked against their event logs. Antigravity and Grok CLI were called through local wrapper scripts that give no tool log, so those runs are 'unverified'.",
  "operator_access_during_batch": "To score finished runs early, the operator made the repository readable three times for about 10 ms each (15:22:23, 15:22:48, 15:57:54 local time). Only Claude Code runs with the model claude-fable-5-1 were active at those times; their logs show a single read of the page image.",
- "efforts": "Claude Code xhigh (haiku: CLI default), Codex CLI max, Grok CLI xhigh, Antigravity model label 'Gemini 3.8 Flash (High)'"
+ "efforts": "Claude Code xhigh (haiku: CLI default), Codex CLI max, Grok CLI xhigh, Antigravity model label 'Gemini 3.8 Flash (High)'",
+ "follow_up": "Run later the same day: the two handwritten-font pages were read by claude-code+opus-5.5 and codex-cli+gpt-6.1-sol only; solo-2 by those two and their predecessors claude-code+opus-5 and codex-cli+gpt-5.6-sol only. One run per cell."
 }
