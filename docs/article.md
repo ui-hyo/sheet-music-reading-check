@@ -106,12 +106,9 @@ For a low-resolution source, the first step is unchanged: crop each system and e
 
 ## Limits
 
-- **Small.** Three pages in the default font, two in the handwritten-style font, one low-resolution page, one run per cell. No error bars.
-- **One kind of music.** A single line with chord symbols in 4/4. No piano music, no multiple voices, no real handwriting, no scans of old editions.
-- **Model plus CLI.** Each CLI handles images in its own way. Gemini and Grok ran through wrapper scripts that give no tool log, so I cannot show that those runs followed the look-only rule.
-- **Effort settings differ** between vendors, and I did not vary them.
-- **Fable 5.1** gave no answer on page A within my 45-minute limit, so its row is half empty.
-- **I stopped the low-resolution runs early.** Only six products have a low-resolution result.
+- **Small.** Three pages in the default font, two in the handwritten-style font and one low-resolution page, each read once. There are no error bars, so small differences mean nothing.
+- **One kind of music.** A single line with chord symbols in 4/4, generated and cleanly engraved. No piano music, no real handwriting, no scans of old editions.
+- **Model plus CLI.** Each CLI handles images in its own way, and I used each vendor's usual effort setting. Gemini and Grok ran through wrapper scripts that give no tool log, so for those two I cannot show that the look-only rule was followed.
 
 ## Reproduce
 
