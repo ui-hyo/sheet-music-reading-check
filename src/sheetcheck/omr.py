@@ -51,8 +51,9 @@ def main(argv=None):
     args = ap.parse_args(argv)
     version = None
     if shutil.which('audiveris'):
-        out = subprocess.run(['audiveris', '-help'], capture_output=True, text=True, timeout=120)
-        version = next((line.strip() for line in (out.stdout + out.stderr).splitlines() if 'version' in line.lower()), None)
+        out = subprocess.run(['audiveris', '-version'], capture_output=True, text=True, timeout=120)
+        version = next(('Audiveris ' + line.split(':', 1)[1].strip() for line in (out.stdout + out.stderr).splitlines()
+                        if line.strip().lower().startswith('- version:')), None)
     folder = ROOT / 'results' / args.batch / PRODUCT
     folder.mkdir(parents=True, exist_ok=True)
     answers = {}
