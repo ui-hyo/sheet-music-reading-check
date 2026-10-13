@@ -108,7 +108,7 @@ For a clean print, the measurement points to a simpler procedure:
 
 The steps, with the command for the comparison, are on [a separate page](workflow.md).
 
-Since the measurement I have used it once on a real transcription, a 468-bar jazz guitar part with chords, printed with tablature. The list was much longer there: 161 of the 358 written bars. The tablature, read separately, settled all but three of the bars where the notes differed, and an agent checked those three against the enlarged source. It also showed 20 notes under an 8va line that both models had read an octave low in the same way. [What happened](workflow.md#one-real-use) is on that page.
+Since the measurement I have used it once on a real transcription, a 468-bar jazz guitar part with chords, printed with tablature. The list was much longer there: 161 of the 358 written bars. Chords were the weak point: of the 191 that could be compared with the final reading, one model differed on 68 and the other on 15. The tablature, read separately, settled all but three of the bars where the notes differed, and an agent checked those three against the enlarged source. It also showed 20 notes under an 8va line that both models had read an octave low in the same way. [What happened](workflow.md#one-real-use) is on that page.
 
 On page A, leaving the `?` marks aside, the readings of Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars where one of them was wrong. Two readers can still share an error, so agreement narrows the checking without proving anything.
 

@@ -89,7 +89,7 @@ Opus 5.5 and GPT-6.1 Sol each produced one notation reading of each page. The ta
 - **The agent did the checking, not I.** The bars were settled by its scripts, and for the last three by its own look at the source. The page layout, the tablature comparison and the MusicXML builder were written for this tune and are not in this repository. From this repository the run used the format, the runner that keeps each reader to its page image, `compare`, and the round trip of step 6.
 - **The round trip did not come out at zero as it stands.** The command of step 6 lists 34 of the 468 bars: 32 where the exported file spells a chord symbol in another way (`G7alt` comes back as `G7b5#5b9#9`), one where a chord symbol had been moved to the nearest half beat, and one where only some notes of a chord are tied. The agent's verifier allows for these three things and then reports no difference. A separate check found the same notes struck in every bar.
 
-I then listened to the result against the recording, with the transcription laid over the audio and the score following along. It seemed almost perfect to me, the chords included.
+I then listened to the result against the recording, with the transcription laid over the audio and the score following along. It seemed almost perfect to me. That is an impression from listening, not a check. The chord pitches in the result match the tablature as at least one of the two models read it, and nobody compared them with the recording note by note.
 
 ## Limits
 
