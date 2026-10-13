@@ -66,6 +66,8 @@ PYTHONPATH=src python3 -m sheetcheck.compare final.txt roundtrip.txt     # expec
 
 This finds what was lost or changed on the way into MuseScore, chord symbols included. It cannot find a misreading, because both sides come from the same reading. This repository has no converter from a reading to MusicXML (its writer serves the generated test pages only). In my own work an agent writes that script for each tune. As a last step the agent compares each rendered system with the same system in the source.
 
+**7. If there is a recording, listen against it.** Nothing above compares the result with the music itself, and a mistake in the source survives every step. In the one real use an agent aligned the rendered transcription with the recording beat by beat, mixed the two into one audio file, and made a video in which the score follows along. Listening to that is a quick way to hear a wrong passage. It is an impression and not a check. MuseScore has no built-in way to play a recording along with the score, so this happens outside it, and the scripts for it are not in this repository.
+
 ## How much does comparing catch?
 
 On the stored readings of the three default-font pages, I paired each current Claude model with each current Codex model: 22 pairs. In every pair, every bar that either reader had wrong was on the list. (`tests/test_compare.py` checks this.)
