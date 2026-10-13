@@ -1,6 +1,6 @@
 # Sheet-music reading went from 20% to 99.8% in one model generation
 
-*Three generated pages, one run each: a small measurement, not a benchmark. Numbers are from 12 October 2026.*
+*Three generated pages, one run each: a small measurement, not a benchmark. The measurement numbers are from 12 October 2026.*
 
 I transcribe jazz solos into MuseScore with AI coding agents. Until this summer it went like this. An optical music recognition (OMR) program made a draft, and a model reviewed it. The model would write five or six beats into a four-beat bar, and cleaning that up cost me so much time that I added a rule to block it, along with other rules to keep the result musically sensible. Even then the model got notes wrong, and I went through each page myself and fixed it note by note.
 
@@ -108,7 +108,7 @@ For a clean print, the measurement points to a simpler procedure:
 
 The steps, with the command for the comparison, are on [a separate page](workflow.md).
 
-Since the measurement I have used it once on a real transcription, a 468-bar jazz guitar part with chords, printed with tablature. The list was much longer there: 161 of the 358 written bars. Chords were the weak point: of the 191 that could be compared with the final reading, one model differed on 68 and the other on 15. The tablature, read separately, settled all but three of the bars where the notes differed, and an agent checked those three against the enlarged source. It also showed 20 notes under an 8va line that both models had read an octave low in the same way. [What happened](workflow.md#one-real-use) is on that page.
+Since the measurement I have used it once on a real transcription, a 468-bar jazz guitar part with chords, printed with tablature. The list was much longer there: 161 of the 358 written bars. Chords were the weak point: of the 191 that could be compared with the final reading, one model differed on 68 and the other on 15. That time the readers had not been allowed to crop or enlarge the pages. In a later test on two of the pages, the same two models, allowed to do so, matched the final reading on all 63 struck chords. The tablature, read separately, settled all but three of the bars where the notes differed, and an agent checked those three against the enlarged source. It also showed 20 notes under an 8va line that both models had read an octave low in the same way. [What happened](workflow.md#one-real-use) is on that page.
 
 On page A, leaving the `?` marks aside, the readings of Opus 5.5 and Astra differ in three bars: 8, 27 and 28. Those are exactly the bars where one of them was wrong. Two readers can still share an error, so agreement narrows the checking without proving anything.
 
