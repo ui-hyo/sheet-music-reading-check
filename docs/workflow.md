@@ -4,6 +4,8 @@
 
 The aim is to stop proofreading every note. Two readers read the page independently, a program lists the bars that need a look, and a person checks those bars against the image.
 
+This is not a method for every transcription. The steps come from one kind of page and one real use, and a different source or a different kind of music may need them changed.
+
 ## Steps
 
 **1. Prepare the image.** A clean print rendered at 300 dpi can go to the readers as it is. A low-resolution source, such as a screen capture or a video frame, cannot: crop each system and enlarge it first, or give each reader the means to do so itself (see [One real use](#one-real-use)). In the measurement, Opus 5.5 scored 77% on a 620-pixel copy of a page where it otherwise had one wrong note.
