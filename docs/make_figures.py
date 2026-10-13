@@ -1,4 +1,4 @@
-"""Draw the figures for docs/index.md from the stored scores.
+"""Draw the figures for docs/index.md and docs/workflow.md from the stored scores.
 
     .venv/bin/python docs/make_figures.py        (needs matplotlib and pillow)
 """
@@ -90,6 +90,35 @@ def paired_figure(filename, title, products, left, right, left_label, right_labe
     fig.tight_layout(); fig.savefig(OUT / filename, dpi=160); plt.close(fig)
 
 
+def real_use_figure():
+    """Wrong chords on two pages of the one real transcription, one bar for each reading (results/real-use)."""
+    data = json.loads((ROOT / 'results/real-use/two-page-test.json').read_text())
+    tone = {'no tools': GREY, 'no tools, other image': LIGHT, 'shell': BLUE}
+    ticks, labels, heads, rows, pos, last = [], [], [], [], 0.0, None
+    for r in data['rows']:
+        if r['product'] != last:                      # a line with the model's name above its readings
+            pos += 1.5 if last else 0.0
+            last = r['product']
+            ticks.append(pos); labels.append(NAME[last].split(' · ')[-1]); heads.append(len(ticks) - 1)
+        pos += 1.0
+        ticks.append(pos); labels.append(r['condition']); rows.append((pos, r['chords_differ'], tone[r['kind']]))
+    fig, ax = plt.subplots(figsize=(9, 0.3 * len(ticks) + 1.9))
+    bars = ax.barh([y for y, _, _ in rows], [v for _, v, _ in rows], 0.72, color=[c for _, _, c in rows])
+    for bar, (_, v, _) in zip(bars, rows):
+        ax.text(v + 0.4, bar.get_y() + bar.get_height() / 2, str(v), va='center', fontsize=8)
+    ax.set_yticks(ticks); ax.set_yticklabels(labels, fontsize=8); ax.invert_yaxis()
+    for i in heads:
+        ax.get_yticklabels()[i].set_fontweight('bold'); ax.get_yticklabels()[i].set_fontsize(9)
+    ax.tick_params(axis='y', length=0)
+    ax.set_xlim(0, 30); ax.set_xlabel(f"chords that differ from the final reading (of {data['chords']} on the two pages)", fontsize=9)
+    ax.spines[['top', 'right']].set_visible(False)
+    fig.suptitle('Two pages of a blurred video-frame source, each reading made once', fontsize=11)
+    fig.legend([plt.Rectangle((0, 0), 1, 1, color=c) for c in (GREY, LIGHT, BLUE)],
+               ['no tools, the pages as first given', 'no tools, another image of the same bars', 'a shell to cut up and enlarge the image'],
+               frameon=False, fontsize=8, loc='lower center', ncol=3)
+    fig.tight_layout(rect=(0, 0.04, 1, 1)); fig.savefig(OUT / 'real-use-test.png', dpi=160); plt.close(fig)
+
+
 def excerpt(filename, page, box, marks):
     """Crop a region of a page image and ring the notes that were misread."""
     im = Image.open(ROOT / 'material' / page / 'clean.png').convert('RGB')
@@ -109,6 +138,7 @@ if __name__ == '__main__':
     paired_figure('font.png', 'Same notes in the default font and in a handwritten-style font',
                   ['codex-cli+gpt-6.1-sol', 'claude-code+opus-5.5', 'audiveris (OMR only)'],
                   ('solo-1', 'clean'), ('solo-1-hand', 'clean'), 'default engraving', 'handwritten-style font (MuseJazz)', 'no output')
+    real_use_figure()
     excerpt('misread-bar8.png', 'solo-1', (1330, 730, 2400, 1010), [(2059, 876)])
     excerpt('misread-bar27.png', 'solo-1', (1230, 2640, 2400, 2900), [(1492, 2812), (1596, 2803), (1752, 2811)])
     print(sorted(p.name for p in OUT.iterdir()))

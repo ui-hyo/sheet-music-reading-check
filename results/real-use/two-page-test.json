@@ -1,0 +1,23 @@
+{
+ "note": "Counts from the one real transcription described in docs/workflow.md and from a test on two of its pages, 13 October 2026. A chord or note is counted when its pitches differ from the final reading of the tune. The readings themselves are not in this repository.",
+ "pages": 2,
+ "chords": 63,
+ "single_notes": 84,
+ "rows": [
+  {"product": "claude-code+opus-5.5", "condition": "no tools: the reading used in the transcription", "kind": "no tools", "chords_differ": 26, "single_notes_differ": 1},
+  {"product": "claude-code+opus-5.5", "condition": "no tools: read again", "kind": "no tools", "chords_differ": 14, "single_notes_differ": 2},
+  {"product": "claude-code+opus-5.5", "condition": "no tools: a prompt rule about chords added", "kind": "no tools", "chords_differ": 16, "single_notes_differ": 14},
+  {"product": "claude-code+opus-5.5", "condition": "no tools: each page cut in two, twice the size", "kind": "no tools, other image", "chords_differ": 8, "single_notes_differ": 4},
+  {"product": "claude-code+opus-5.5", "condition": "no tools: the same bars, cleanly engraved", "kind": "no tools, other image", "chords_differ": 1, "single_notes_differ": 0},
+  {"product": "claude-code+opus-5.5", "condition": "a shell, told to cut up and enlarge", "kind": "shell", "chords_differ": 0, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6.1-sol", "condition": "no tools: the reading used in the transcription", "kind": "no tools", "chords_differ": 8, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6.1-sol", "condition": "no tools: read again", "kind": "no tools", "chords_differ": 4, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6.1-sol", "condition": "no tools: a prompt rule about chords added", "kind": "no tools", "chords_differ": 4, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6.1-sol", "condition": "a shell, told to cut up and enlarge", "kind": "shell", "chords_differ": 0, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6-astra", "condition": "no tools", "kind": "no tools", "chords_differ": 1, "single_notes_differ": 0},
+  {"product": "codex-cli+gpt-6-astra", "condition": "a shell, told to cut up and enlarge", "kind": "shell", "chords_differ": 0, "single_notes_differ": 0},
+  {"product": "claude-code+sonnet-5.5", "condition": "a shell, told to cut up and enlarge", "kind": "shell", "chords_differ": 1, "single_notes_differ": 0},
+  {"product": "claude-code+fable-5.1", "condition": "a shell, told to cut up and enlarge", "kind": "shell", "chords_differ": 1, "single_notes_differ": 0}
+ ],
+ "not_drawn": "claude-code+fable-5.1 without tools finished one of the two pages (29 of its 42 chords and 16 of its 30 single notes differed); the other page ran into the 45-minute limit. claude-code+sonnet-5.5 was not read without tools."
+}
