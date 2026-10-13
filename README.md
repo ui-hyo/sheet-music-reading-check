@@ -50,15 +50,19 @@ PYTHONPATH=src python3 -m sheetcheck.musicxml score.musicxml > score.txt     # M
 
 `compare` lists a bar when the readings disagree on it, when a reader marked it with `?`, when it does not add up to the time signature, or when a reading has no usable line for it. The procedure around it is in [docs/workflow.md](docs/workflow.md). It has been run on the stored readings here and used once on a real transcription, which that page describes.
 
+[`extras/`](extras/README.md) holds four scripts for the steps after the comparison: a builder that writes MusicXML from a reading, and three that set the transcription against a recording (beat alignment, an overlay mix, a video in which the score follows the sound). They come from that one transcription and are starting points to change for another tune.
+
 ## Requirements
 
-Python 3.12, MuseScore 4 as `mscore4` for building pages, Audiveris for the OMR baseline, and the agent CLIs you want to measure.
+Python 3.12, MuseScore 4 as `mscore4` for building pages, Audiveris for the OMR baseline, and the agent CLIs you want to measure. The scripts in `extras/` that work with a recording also need numpy, scipy, librosa, soundfile and ffmpeg.
 
 ## Tests
 
 ```sh
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests
 ```
+
+The tests of the listening scripts in `extras/` make their own recording; they are skipped where librosa is not installed.
 
 ## License
 

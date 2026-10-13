@@ -57,18 +57,26 @@ It costs checking time. On pages A, B and C, adding the Audiveris reading to the
 
 A source that prints the same notes a second time can do this job instead. Guitar tablature did it for pitch in the [one real use](#one-real-use).
 
-**6. Build the score and round-trip it.** An agent writes MusicXML from the corrected reading and MuseScore converts it. Then export MusicXML again from the MuseScore file and compare it with the reading:
+**6. Build the score and round-trip it.** Write MusicXML from the corrected reading and let MuseScore convert it. Then export MusicXML again from the MuseScore file and compare it with the reading:
 
 ```sh
+PYTHONPATH=src python3 extras/build_musicxml.py final.txt tune.musicxml --title 'A tune' --tempo 190
 mscore4 -o tune.mscz tune.musicxml
 mscore4 -o roundtrip.musicxml tune.mscz
 PYTHONPATH=src python3 -m sheetcheck.musicxml roundtrip.musicxml > roundtrip.txt
 PYTHONPATH=src python3 -m sheetcheck.compare final.txt roundtrip.txt     # expect: 0 bars to check
 ```
 
-This finds what was lost or changed on the way into MuseScore, chord symbols included. It cannot find a misreading, because both sides come from the same reading. This repository has no converter from a reading to MusicXML (its writer serves the generated test pages only). In my own work an agent writes that script for each tune. As a last step the agent compares each rendered system with the same system in the source.
+This finds what was lost or changed on the way into MuseScore, chord symbols included. It cannot find a misreading, because both sides come from the same reading. [`extras/build_musicxml.py`](https://github.com/ui-hyo/sheet-music-reading-check/tree/main/extras) is the builder from the one real use, with the parts that belonged to that tune taken out: a starting point to change for yours. As a last step, compare each rendered system with the same system in the source.
 
-**7. If there is a recording, listen against it.** Nothing above compares the result with the music itself, and a mistake in the source survives every step. In the one real use an agent aligned the rendered transcription with the recording beat by beat, mixed the two into one audio file, and made a video in which the score follows along. Listening to that is a quick way to hear a wrong passage. It is an impression and not a check. MuseScore has no built-in way to play a recording along with the score, so this happens outside it, and the scripts for it are not in this repository.
+**7. If there is a recording, listen against it.** Nothing above compares the result with the music itself, and a mistake in the source survives every step. In the one real use an agent aligned the rendered transcription with the recording beat by beat, mixed the two into one audio file, and made a video in which the score follows along. Listening to that is a quick way to hear a wrong passage. It is an impression and not a check. MuseScore has no built-in way to play a recording along with the score, so this happens outside it:
+
+```sh
+PYTHONPATH=src python3 extras/align_audio.py final.txt recording.mp3 map.json --tempo 190
+PYTHONPATH=src python3 extras/make_overlay.py final.txt recording.mp3 map.json overlay.mp3
+```
+
+The first command works out where each beat of the score lies in the recording, and the second mixes the transcription onto it. The same folder has the script for the video. These too are starting points from that one use, and the alignment is a calculation that can be wrong: [extras/README.md](https://github.com/ui-hyo/sheet-music-reading-check/blob/main/extras/README.md) says what they assume.
 
 ## How much does comparing catch?
 
@@ -92,7 +100,7 @@ Each bar is one reading of the two pages. The shell readings changed the instruc
 
 **Rhythm had no second source.** This tablature prints no rhythm, so note values and ties rest on the two readings, which disagreed in eight bars. Audiveris could not be a third reading: on the three pages that were checked it found 8 or 9 bars where the page has 32. Nobody compared the result with the recording note by note. I listened to it against the recording, with the transcription laid over the audio and the score following along. It seemed almost perfect to me. That is an impression from listening, not a check.
 
-**The agent did the checking, not I.** Its scripts settled the bars. The page layout, the tablature comparison and the MusicXML builder were written for this tune and are not in this repository. The round trip of step 6 needed allowances as well: as it stands it lists 34 of the 468 bars, 32 of them because the exported file spells a chord symbol in another way (`G7alt` comes back as `G7b5#5b9#9`). The agent's verifier reports no difference after allowing for chord spelling, chord placement and ties on only some notes of a chord.
+**The agent did the checking, not I.** Its scripts settled the bars. The page layout and the tablature comparison were written for this tune and are not in this repository. The MusicXML builder and the listening scripts are in `extras/`, without the parts that belonged to the tune. The round trip of step 6 needed allowances as well: as it stands it lists 34 of the 468 bars, 32 of them because the exported file spells a chord symbol in another way (`G7alt` comes back as `G7b5#5b9#9`). The agent's verifier reports no difference after allowing for chord spelling, chord placement and ties on only some notes of a chord.
 
 ## Limits
 
