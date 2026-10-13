@@ -86,6 +86,8 @@ def render(notes: list[tuple[float, float, int]], grid: np.ndarray, samples: int
         t0, t1 = at(b), at(min(b + d, len(grid) - 1))
         w = tone(m, max(0.08, t1 - t0)) / np.sqrt(together[round(b, 3)])   # a four-note chord is not four times as loud
         i = int(t0 * SR)
+        if i < 0:               # the map puts this beat before the recording begins
+            w, i = w[-i:], 0
         if i >= len(add):
             continue
         w = w[:len(add) - i]
@@ -119,7 +121,8 @@ def main(argv=None):
         else:
             out_wav = Path(work) / 'mix.wav'
             sf.write(out_wav, mix, SR)
-            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(out_wav), args.out], check=True)
+            codec = ['-codec:a', 'libmp3lame', '-q:a', '3'] if args.out.endswith('.mp3') else []
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(out_wav), *codec, args.out], check=True)
     print('wrote', args.out, f'peak before limiting {peak:.2f}')
 
 

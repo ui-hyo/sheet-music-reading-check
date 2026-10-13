@@ -84,6 +84,25 @@ class Listen(unittest.TestCase):
         self.assertEqual(gap['bars_written'], 8.0)
         self.assertAlmostEqual(gap['bars_that_fit_at_local_tempo'], 8.0, delta=0.3)
 
+    def test_rest_at_either_end_runs_at_the_tempo_next_to_it(self):
+        import numpy as np
+        import align_audio as A
+        nan = float('nan')
+        grid = A.spread_rests(np.array([nan, nan, 10.0, 10.5, 11.0, nan, nan, nan, 13.0, 13.5, nan, nan]))
+        self.assertEqual([round(float(t), 3) for t in grid], [9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5])
+
+    def test_features_kept_for_one_recording_are_not_used_for_another(self):
+        import numpy as np
+        import align_audio as A
+        with tempfile.TemporaryDirectory() as work:
+            work = pathlib.Path(work)
+            wav, truth = recording(PAGE, work, swing=0.0, period=64)
+            cache = work / 'map.features.npz'
+            np.savez(cache, coarse=np.zeros((12, 4)), fine=np.zeros((12, 4)), onset=np.ones(4), tracked=120.0, audio_sha256='of another file')
+            out = A.align(PAGE, wav, tempo=120.0, cache=cache)
+            self.assertEqual(str(np.load(cache)['audio_sha256']), out['audio_sha256'])
+        self.assertLess(np.abs(np.array(out['beat_seconds']) - truth).max(), 0.25)
+
     def test_overlay_strikes_each_note_at_its_beat_and_holds_tied_notes(self):
         import numpy as np
         import make_overlay as O
@@ -95,6 +114,8 @@ class Listen(unittest.TestCase):
         loud = np.flatnonzero(np.abs(track) > 0.01)
         self.assertAlmostEqual(loud[0] / O.SR, 2.0, delta=0.01)   # the first note is at beat 2
         self.assertEqual(float(np.abs(track[:int(1.99 * O.SR)]).max()), 0.0)
+        early = O.render([(0.0, 1.0, 69)], np.array([-0.3, 0.2, 0.7]), O.SR)      # a beat the map puts before the recording begins
+        self.assertGreater(float(np.abs(early[:100]).max()), 0.0)
 
     def test_overlay_command_keeps_the_length_of_the_recording(self):
         import soundfile as sf
@@ -125,12 +146,28 @@ class Listen(unittest.TestCase):
                 subprocess.run(['mscore4', '-r', '152.4', '-o', str(pages / f'score.{ext}'), str(pages / 'score.mscz')], check=True, capture_output=True, timeout=180)
             bars, _ = V.positions(pages / 'score.mpos')
             self.assertEqual(len(bars), 32)
-            V.main([str(pages), str(work / 'map.json'), str(wav), str(work / 'follow.mp4'), '--tempo', '126', '--seconds', '3'])
+            V.main([str(pages), str(work / 'map.json'), str(wav), str(work / 'follow.mp4'), '--tempo', '126', '--seconds', '5'])
             probe = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_type,width,height', '-of', 'json', str(work / 'follow.mp4')],
                                    capture_output=True, text=True, check=True)
             streams = json.loads(probe.stdout)['streams']
             self.assertEqual(sorted(s['codec_type'] for s in streams), ['audio', 'video'])
             self.assertEqual([(s['width'], s['height']) for s in streams if s['codec_type'] == 'video'], [(1920, 1080)])
+            # The first beat is at 1.5 s and the second bar begins at 3.4 s: before the first beat nothing is marked,
+            # then the first bar is tinted and the line moves through it, then the tint is on the second bar.
+            import numpy as np
+            from PIL import Image
+            shots = {}
+            for t in ('0.5', '1.8', '2.8', '4.2'):
+                subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', t, '-i', str(work / 'follow.mp4'), '-frames:v', '1', str(work / f'{t}.png')], check=True)
+                shots[t] = np.asarray(Image.open(work / f'{t}.png').convert('RGB')).astype(int)
+            tinted = lambda a: int(((a[..., 0] > 200) & (a[..., 2] < 190) & (a[..., 0] - a[..., 2] > 50)).sum())  # noqa: E731
+            red = lambda a: np.flatnonzero(((a[..., 0] > 170) & (a[..., 1] < 110) & (a[..., 2] < 110)).any(axis=0))  # noqa: E731
+            left = lambda a: int(np.flatnonzero(((a[..., 0] > 200) & (a[..., 2] < 190) & (a[..., 0] - a[..., 2] > 50)).sum(axis=0) > 20)[0])  # noqa: E731
+            self.assertEqual(tinted(shots['0.5']), 0)
+            self.assertGreater(tinted(shots['1.8']), 5000)
+            self.assertGreater(red(shots['2.8']).mean(), red(shots['1.8']).mean() + 20)   # the line is further right a second later
+            self.assertEqual(left(shots['2.8']), left(shots['1.8']))                      # still the first bar
+            self.assertGreater(left(shots['4.2']), left(shots['2.8']) + 100)              # the tint has moved to the second bar
 
 
 if __name__ == '__main__':

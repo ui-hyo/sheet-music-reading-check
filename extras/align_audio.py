@@ -1,6 +1,6 @@
 """Find where each beat of a reading sits in a recording (step 7 of docs/workflow.md).
 
-    PYTHONPATH=src python3 extras/align_audio.py final.txt recording.mp3 map.json --tempo 190 [--octave -1]
+    PYTHONPATH=src python3 extras/align_audio.py final.txt recording.mp3 map.json --tempo 190
 
 Writes map.json with `beat_seconds`: the time in the recording of every quarter-note beat of the
 score, counted from the first bar. extras/make_overlay.py and extras/make_video.py read it.
@@ -11,7 +11,8 @@ This comes from the one real transcription described in docs/workflow.md and fro
 transcriptions before it: three jazz recordings in all. Take it as a starting point and change it for
 your tune. What it assumes:
 - 4/4, one tempo that drifts but does not jump, and a form that repeats every --chorus bars;
-- the recording starts within --start-within seconds of the first bar of the reading;
+- the first bar of the reading begins near the start of the recording: it is looked for in the first
+  --start-within seconds and the length of a chorus after them (a place to look, not a limit);
 - chord symbols in the reading (they give the harmony the notes alone do not).
 
 The method: chroma features of the recording, a subsequence DTW against the written notes and chords
@@ -19,6 +20,7 @@ chorus by chorus, smoothing, a small nudge of every bar towards the written pitc
 stretches that slipped by a beat or two. A long rest (` # multirest=N`) splits the score into parts.
 The part after a rest has little to hold on to, so it is followed window by window instead; the beats
 of the rest are spread evenly, and the number of bars that fit the gap is reported as a check on N.
+Only pitch classes are compared, so it makes no difference in which octave the part is written.
 
 Nothing here listens. The map is a calculation: check it by ear with the overlay before trusting it.
 `pitch_agreement_by_shift_in_beats` in the output helps: the value for a shift of 0 should stand well
@@ -87,11 +89,8 @@ def chord_pcs(sym: str) -> list[int]:
     return sorted(set(pcs))
 
 
-def score_events(text: str, octave: int = 0, last_reading_bar: int | None = None) -> tuple[dict, list[dict]]:
-    """Notes and chords on the beat axis of the score, and the long rests found on the way.
-
-    `octave` moves the written pitches to where they sound (-1 for guitar notation).
-    """
+def score_events(text: str, last_reading_bar: int | None = None) -> tuple[dict, list[dict]]:
+    """Notes and chords on the beat axis of the score, and the long rests found on the way."""
     reading = R.parse_text(text)
     if reading.key is None or (reading.time or '4/4') != '4/4':
         raise ValueError('the reading needs a `key:` line and 4/4 time')
@@ -119,7 +118,7 @@ def score_events(text: str, octave: int = 0, last_reading_bar: int | None = None
         for e in bar.events:
             if e.kind != 'note':
                 continue
-            notes.append({'at': beat + float(e.onset), 'd': float(e.dur), 'm': sorted(p.midi + 12 * octave for p in e.pitches)})
+            notes.append({'at': beat + float(e.onset), 'd': float(e.dur), 'm': sorted(p.midi for p in e.pitches)})
         beat += BAR
     if open_chord:
         open_chord['d'] = beat - open_chord['at']
@@ -345,12 +344,31 @@ def track_part(ev, feats, t_guess, spb, first_range=5.0, bars_per_window=8):
     return grid, checks_of(grid, ev['notes'], fine, fps), log
 
 
-def align(text: str, audio: Path, tempo: float, *, octave: int = 0, chorus: int = 32, start_within: float = 20.0,
+def spread_rests(grid: np.ndarray) -> np.ndarray:
+    """Give the beats of the long rests (nan) a time.
+
+    A rest between two parts is spread evenly over the gap. A rest before the first part or after the last one
+    has nothing on its far side, so it runs at the tempo of the part next to it.
+    """
+    known = np.flatnonzero(~np.isnan(grid))
+    out = np.interp(np.arange(len(grid)), known, grid[known])
+    first, last = int(known[0]), int(known[-1])
+    if first > 0:
+        step = float(np.median(np.diff(out[first:first + 64])))
+        out[:first] = out[first] - step * np.arange(first, 0, -1)
+    if last < len(out) - 1:
+        step = float(np.median(np.diff(out[max(first, last - 64):last + 1])))
+        out[last + 1:] = out[last] + step * np.arange(1, len(out) - last)
+    return out
+
+
+def align(text: str, audio: Path, tempo: float, *, chorus: int = 32, start_within: float = 20.0,
           last_reading_bar: int | None = None, cache: Path | None = None) -> dict:
     """The audio map of a reading. `cache` keeps the features of the recording, which take the longest to compute."""
-    ev, rests = score_events(text, octave, last_reading_bar)
-    if cache and cache.exists():
-        z = np.load(cache)
+    ev, rests = score_events(text, last_reading_bar)
+    digest = hashlib.sha256(audio.read_bytes()).hexdigest()
+    z = np.load(cache) if cache and cache.exists() else None
+    if z is not None and 'audio_sha256' in z and str(z['audio_sha256']) == digest:   # the features of this very recording
         coarse, fine, onset, tracked = z['coarse'], z['fine'], z['onset'], float(z['tracked'])
     else:
         y = load(audio)
@@ -359,7 +377,7 @@ def align(text: str, audio: Path, tempo: float, *, octave: int = 0, chorus: int 
         onset = librosa.onset.onset_strength(y=y, sr=SR, hop_length=HOP)
         tracked = float(np.atleast_1d(librosa.beat.beat_track(y=y, sr=SR, hop_length=512)[0])[0])
         if cache:
-            np.savez(cache, coarse=coarse, fine=fine, onset=onset, tracked=tracked)
+            np.savez(cache, coarse=coarse, fine=fine, onset=onset, tracked=tracked, audio_sha256=digest)
     fps = SR / HOP
     feats = (coarse, SR / HOP_COARSE, fine, fps, onset)
     # The beat tracker may lock on to half or double the tempo; take the reading of it nearest to the given tempo.
@@ -416,9 +434,8 @@ def align(text: str, audio: Path, tempo: float, *, octave: int = 0, chorus: int 
         report.append({'beats': [b0, b1], 'start_s': round(float(g[0]), 2), 'end_s': round(float(g[-1]), 2), 'tempo_start': round(float(60 / np.median(np.diff(g[:64]))), 1),
                        'tempo_end': round(float(60 / np.median(np.diff(g[-64:]))), 1), 'pitch_agreement_by_shift_in_beats': checks, 'gap_before': gap, 'windows': windows})
         t_end, previous = float(g[-1]), b1
-    known = ~np.isnan(grid)
-    grid = np.interp(np.arange(len(grid)), np.flatnonzero(known), grid[known])
-    return {'audio': audio.name, 'audio_sha256': hashlib.sha256(audio.read_bytes()).hexdigest(), 'tracked_tempo': round(tracked, 1), 'tempo_used': round(float(bpm), 1),
+    grid = spread_rests(grid)
+    return {'audio': audio.name, 'audio_sha256': digest, 'tracked_tempo': round(tracked, 1), 'tempo_used': round(float(bpm), 1),
             'parts': report, 'beat_seconds': [round(float(t), 3) for t in grid],
             'method': 'chroma subsequence DTW per chorus, smoothed, bar nudges, slip repair; parts after a long rest followed window by window'}
 
@@ -429,12 +446,11 @@ def main(argv=None):
     ap.add_argument('audio', type=Path)
     ap.add_argument('out')
     ap.add_argument('--tempo', type=float, required=True, help='the tempo of the score, as a first guess')
-    ap.add_argument('--octave', type=int, default=0, help='octaves from the written to the sounding pitch (-1 for guitar notation)')
     ap.add_argument('--chorus', type=int, default=32, help='bars of the form that repeats')
-    ap.add_argument('--start-within', type=float, default=20.0, help='seconds of the recording in which the first bar begins')
+    ap.add_argument('--start-within', type=float, default=20.0, help='look for the first bar in this many seconds, and the length of a chorus after them')
     ap.add_argument('--bars', type=int, help='use only the first N bars of the reading (for a trial)')
     args = ap.parse_args(argv)
-    out = align(Path(args.reading).read_text(encoding='utf-8'), args.audio, args.tempo, octave=args.octave, chorus=args.chorus,
+    out = align(Path(args.reading).read_text(encoding='utf-8'), args.audio, args.tempo, chorus=args.chorus,
                 start_within=args.start_within, last_reading_bar=args.bars, cache=Path(args.out).with_suffix('.features.npz'))
     Path(args.out).write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps({k: v for k, v in out.items() if k != 'beat_seconds'}, indent=1))

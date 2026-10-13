@@ -63,6 +63,11 @@ class BuildMusicXML(unittest.TestCase):
         ties = [(n.findtext('pitch/step'), [t.get('type') for t in n.findall('tie')]) for n in notes]
         self.assertEqual(ties, [('C', ['start']), ('E', []), ('G', []), ('C', ['stop']), ('F', []), ('A', [])])
 
+    def test_grace_note_between_two_tied_notes_does_not_break_the_tie(self):
+        xml, _ = B.build('key: 0\ntime: 4/4\nm1 | chords: | events: C5:q~ g(D5) C5:q R:h\n')
+        notes = ET.fromstring(xml.split('\n', 2)[2]).find('part').find('measure').findall('note')
+        self.assertEqual([[t.get('type') for t in n.findall('tie')] for n in notes[:3]], [['start'], [], ['stop']])
+
     def test_long_rest_becomes_real_bars_and_the_map_says_which(self):
         xml, mapping = B.build(LONG_REST)
         measures = ET.fromstring(xml.split('\n', 2)[2]).find('part').findall('measure')
@@ -72,11 +77,32 @@ class BuildMusicXML(unittest.TestCase):
         self.assertEqual(mapping, [{'reading_bar': 1, 'first_real_bar': 1, 'real_bars': 1}, {'reading_bar': 2, 'first_real_bar': 2, 'real_bars': 8},
                                    {'reading_bar': 3, 'first_real_bar': 10, 'real_bars': 1}])
 
+    def test_reading_written_out_compares_with_the_score_bar_for_bar(self):
+        """With a long rest the bar numbers of the score run ahead, so the reading itself cannot be compared with it."""
+        xml, _ = B.build(LONG_REST)
+        self.assertNotEqual(listed(LONG_REST, back(xml)), [])
+        written_out = B.expanded(LONG_REST)
+        self.assertEqual(sorted(R.parse_text(written_out).bars), list(range(1, 11)))
+        self.assertEqual(listed(written_out, back(xml)), [])
+
     def test_other_time_signature_and_guitar_octave(self):
         text = 'key: 2\ntime: 3/4\nm1 | chords: 1=D | events: F#4:q A4:q D5:q\nm2 | chords: | events: R:h.\n'
         xml, _ = B.build(text, octave_down=True, part_name='Guitar')
         attrs = ET.fromstring(xml.split('\n', 2)[2]).find('part').find('measure').find('attributes')
         self.assertEqual((attrs.findtext('time/beats'), attrs.findtext('time/beat-type'), attrs.findtext('transpose/octave-change')), ('3', '4', '-1'))
+
+    def test_short_note_values_keep_their_exact_length(self):
+        text = 'key: 0\ntime: 4/4\nm1 | chords: | events: C5:32. D5:32. E5:32 R:h R:q R:8\n'
+        xml, _ = B.build(text)
+        measure = ET.fromstring(xml.split('\n', 2)[2]).find('part').find('measure')
+        div = int(measure.findtext('attributes/divisions'))
+        self.assertEqual(sum(int(n.findtext('duration')) for n in measure.findall('note')), 4 * div)
+        self.assertEqual(listed(text, back(xml)), [])
+
+    def test_whole_bar_rest_in_three_four(self):
+        xml, _ = B.build('key: 0\ntime: 3/4\nm1 | chords: | events: C5:h.\nm2 | chords: | events: R:w\n')
+        rest = ET.fromstring(xml.split('\n', 2)[2]).find('part').findall('measure')[1].find('note')
+        self.assertEqual((rest.find('rest').get('measure'), rest.findtext('duration')), ('yes', '72'))
 
     def test_bar_of_the_wrong_length_is_refused(self):
         with self.assertRaisesRegex(ValueError, 'm1 adds up to 3'):
@@ -89,6 +115,8 @@ class BuildMusicXML(unittest.TestCase):
         self.assertEqual(B.parse_symbol('Ab/Bb')['bass'], ('B', -1))
         with self.assertRaises(ValueError):
             B.parse_symbol('H7')
+        with self.assertRaisesRegex(ValueError, r"m2: chord quality in 'Cxyz'"):
+            B.build('key: 0\ntime: 4/4\nm1 | chords: 1=C | events: C5:w\nm2 | chords: 1=Cxyz | events: C5:w\n')
 
     @unittest.skipUnless(shutil.which('mscore4'), 'MuseScore 4 is not installed')
     def test_round_trip_through_musescore(self):

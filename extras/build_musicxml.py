@@ -13,7 +13,9 @@ bar call for. A chord symbol is moved to the nearest half beat.
 Two notes a reading may carry after ` # ` are used as well:
   # multirest=8        the bar is a rest of 8 bars; it becomes 8 real bars, so later bar numbers shift
   # section=Head       a boxed label above the bar
---map writes which bar of the score each bar of the reading became.
+--map writes which bar of the score each bar of the reading became. --expanded writes the reading with
+the long rests written out and the bars numbered as in the score: that is the text to compare with what
+MuseScore exports again.
 
 Not here: slurs and other markings, a tablature staff, more than one voice, time signature changes.
 """
@@ -24,11 +26,12 @@ import json
 import re
 import xml.etree.ElementTree as ET
 from fractions import Fraction as F
+from math import lcm
 from pathlib import Path
 
 from sheetcheck import reading as R
 
-DIV = 24  # divisions per quarter: eighth triplets 8, sixteenths 6, sixteenth triplets 4, thirty-seconds 3
+DIV = 24  # divisions per quarter at least: eighth triplets 8, sixteenths 6, sixteenth triplets 4, thirty-seconds 3
 TYPE = {'w': 'whole', 'h': 'half', 'q': 'quarter', '8': 'eighth', '16': '16th', '32': '32nd'}
 DOCTYPE = '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">'
 
@@ -133,7 +136,7 @@ def structure(events_text: str) -> list[dict]:
     return out
 
 
-def note_el(m, ev: R.Event, st: dict | None, p: R.Pitch | None, *, chord=False, grace=False, tie_stop=False, tie_start=False):
+def note_el(m, ev: R.Event, st: dict | None, p: R.Pitch | None, div: int, *, chord=False, grace=False, tie_stop=False, tie_start=False):
     n = sub(m, 'note')
     if grace:
         sub(n, 'grace')
@@ -148,7 +151,7 @@ def note_el(m, ev: R.Event, st: dict | None, p: R.Pitch | None, *, chord=False, 
             sub(pe, 'alter', p.alter)
         sub(pe, 'octave', p.octave)
     if not grace:
-        sub(n, 'duration', int(ev.dur * DIV))
+        sub(n, 'duration', int(ev.dur * div))
         if tie_stop:
             sub(n, 'tie', type='stop')
         if tie_start:
@@ -174,10 +177,10 @@ def note_el(m, ev: R.Event, st: dict | None, p: R.Pitch | None, *, chord=False, 
             sub(ne, tag, **at)
 
 
-def rest_bar(m, quarters: F):
+def rest_bar(m, quarters: F, div: int):
     rn = sub(m, 'note')
     sub(rn, 'rest', measure='yes')
-    sub(rn, 'duration', int(quarters * DIV))
+    sub(rn, 'duration', int(quarters * div))
     sub(rn, 'voice', 1)
 
 
@@ -253,23 +256,31 @@ def build(text: str, *, title: str = '', composer: str = '', subtitle: str = '',
     # A `~` ties an event to the next one, note by note: only a pitch that is there again is tied.
     flat = [e for n in nums for e in (reading.bars[n].events if 'multirest' not in reading.bars[n].comment else [None])]
     carries = {}
-    for e, nxt in zip(flat, flat[1:] + [None]):
-        if e is not None and e.kind == 'note' and e.tie and nxt is not None and nxt.kind == 'note':
+    for i, e in enumerate(flat):
+        if e is None or e.kind != 'note' or not e.tie:
+            continue
+        nxt = next((x for x in flat[i + 1:] if x is None or x.kind != 'grace'), None)   # a grace note in between does not break the tie
+        if nxt is not None and nxt.kind == 'note':
             carries[id(e)] = {p.midi for p in e.pitches} & {p.midi for p in nxt.pitches}
+    # Divisions in which every note value of this reading is a whole number (a dotted thirty-second needs 48).
+    div = lcm(DIV, bar_len.denominator, *(e.dur.denominator for n in nums for e in reading.bars[n].events))
     real, mapping, tie_open = 0, [], set()
     for n in nums:
         bar = reading.bars[n]
         info = notes_of(bar.comment)
         rest_bars = int(info.get('multirest', 0))
         mapping.append({'reading_bar': n, 'first_real_bar': real + 1, 'real_bars': max(1, rest_bars)})
-        if not rest_bars and bar.length() != bar_len:
+        events = list(bar.events)
+        # `R:w` is how the format writes a rest of the whole bar, whatever the time signature.
+        whole_rest = len(events) == 1 and events[0].kind == 'rest' and events[0].dur in (4, bar_len)
+        if not rest_bars and not whole_rest and bar.length() != bar_len:
             raise ValueError(f'm{n} adds up to {bar.length()} quarter notes, not {bar_len}')
         for k in range(max(1, rest_bars)):
             real += 1
             m = sub(part, 'measure', number=real)
             if real == 1:
                 a = sub(m, 'attributes')
-                sub(a, 'divisions', DIV)
+                sub(a, 'divisions', div)
                 sub(sub(a, 'key'), 'fifths', reading.key)
                 t = sub(a, 'time')
                 sub(t, 'beats', beats)
@@ -296,13 +307,11 @@ def build(text: str, *, title: str = '', composer: str = '', subtitle: str = '',
                 d = sub(m, 'direction', placement='above')
                 sub(sub(d, 'direction-type'), 'rehearsal', info['section'])
             if rest_bars:
-                rest_bar(m, bar_len)
+                rest_bar(m, bar_len, div)
         if rest_bars:
             tie_open = set()
             continue
         chords = sorted(((F(round(float(beat) * 2), 2) - 1, sym) for beat, sym in bar.chords), key=lambda c: c[0])  # to the nearest half beat
-        events = list(bar.events)
-        whole_rest = len(events) == 1 and events[0].kind == 'rest' and events[0].dur == bar_len
         i = 0
         for st in structure(raw[n]):
             graces, i = events[i:i + st['graces']], i + st['graces']
@@ -310,18 +319,21 @@ def build(text: str, *, title: str = '', composer: str = '', subtitle: str = '',
             i += 1
             while chords and chords[0][0] < ev.onset + ev.dur:
                 at, sym = chords.pop(0)
-                harmony(m, sym, int((at - ev.onset) * DIV))
+                try:
+                    harmony(m, sym, int((at - ev.onset) * div))
+                except ValueError as exc:   # a symbol parse_symbol does not know: say where it is
+                    raise ValueError(f'm{n}: {exc}') from None
             for g in graces:
-                note_el(m, g, None, g.pitches[0], grace=True)
+                note_el(m, g, None, g.pitches[0], div, grace=True)
             if ev.kind == 'rest':
                 if whole_rest:
-                    rest_bar(m, bar_len)
+                    rest_bar(m, bar_len, div)
                 else:
-                    note_el(m, ev, st, None)
+                    note_el(m, ev, st, None, div)
                 tie_open = set()
             else:
                 for j, p in enumerate(sorted(ev.pitches, key=lambda p: p.midi)):
-                    note_el(m, ev, st, p, chord=j > 0, tie_stop=p.midi in tie_open, tie_start=p.midi in carries.get(id(ev), ()))
+                    note_el(m, ev, st, p, div, chord=j > 0, tie_stop=p.midi in tie_open, tie_start=p.midi in carries.get(id(ev), ()))
                 tie_open = set(carries.get(id(ev), ()))
         if i != len(events) or chords:
             raise ValueError(f'm{n}: left over {events[i:]} {chords}')
@@ -329,6 +341,22 @@ def build(text: str, *, title: str = '', composer: str = '', subtitle: str = '',
             sub(sub(m, 'barline', location='right'), 'bar-style', 'light-heavy')
     ET.indent(root, space='  ')
     return f'<?xml version="1.0" encoding="UTF-8"?>\n{DOCTYPE}\n' + ET.tostring(root, encoding='unicode') + '\n', mapping
+
+
+def expanded(text: str) -> str:
+    """The reading with every long rest written out bar by bar, and the bars numbered as in the score."""
+    out, real = [], 0
+    for line in text.splitlines():
+        body, _, comment = line.partition(' # ')
+        m = R.BAR_RE.match(body.strip())
+        if not m:
+            out.append(line)
+            continue
+        rest = re.search(r'multirest=(\d+)', comment)
+        for _ in range(int(rest.group(1)) if rest else 1):
+            real += 1
+            out.append(f'm{real} | chords: | events: R:w' if rest else re.sub(r'^m\d+', f'm{real}', body.strip()))
+    return '\n'.join(out) + '\n'
 
 
 def main(argv=None):
@@ -344,6 +372,7 @@ def main(argv=None):
     ap.add_argument('--midi-program', type=int, help='General MIDI program for playback, 1 to 128 (27 is a jazz guitar)')
     ap.add_argument('--layout', choices=sorted(LAYOUTS), default='a4')
     ap.add_argument('--map', help='write here which bars of the score each bar of the reading became')
+    ap.add_argument('--expanded', help='write here the reading with the long rests written out and the bars numbered as in the score')
     args = ap.parse_args(argv)
     xml, mapping = build(Path(args.reading).read_text(encoding='utf-8'), title=args.title, composer=args.composer, subtitle=args.subtitle,
                          tempo=args.tempo, part_name=args.part_name, octave_down=args.octave_down, midi_program=args.midi_program, layout=args.layout)
@@ -351,6 +380,8 @@ def main(argv=None):
     real = mapping[-1]['first_real_bar'] + mapping[-1]['real_bars'] - 1
     if args.map:
         Path(args.map).write_text(json.dumps({'real_bars': real, 'bars': mapping}, indent=1) + '\n')
+    if args.expanded:
+        Path(args.expanded).write_text(expanded(Path(args.reading).read_text(encoding='utf-8')), encoding='utf-8')
     print('wrote', args.out, len(mapping), 'bars in the reading,', real, 'bars in the score')
 
 
